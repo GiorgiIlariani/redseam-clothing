@@ -1,25 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useRef } from "react";
+import React from "react";
 import { ShowWhen } from "./ShowWhen";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
+import { useDropdown } from "@/hooks/useDropdown";
+import { getUserAvatarSrc, handleImageError, formatCartItemCount } from "@/utils/componentUtils";
 
 const HeaderComponent = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { openCart, uniqueItemsCount } = useCart();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
+  const { isOpen: isDropdownOpen, dropdownRef, toggleDropdown, closeDropdown } = useDropdown();
 
   const handleLogout = () => {
     logout();
-    setIsDropdownOpen(false);
+    closeDropdown();
   };
 
   return (
@@ -69,32 +66,22 @@ const HeaderComponent = () => {
             />
             {uniqueItemsCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-[#FF4000] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                {uniqueItemsCount > 99 ? "99+" : uniqueItemsCount}
+                {formatCartItemCount(uniqueItemsCount)}
               </span>
             )}
           </button>
 
-          {/* User Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={toggleDropdown}
               className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity duration-200">
               <Image
-                src={
-                  user?.avatar &&
-                  user.avatar !== "null" &&
-                  user.avatar.trim() !== ""
-                    ? user.avatar
-                    : "/assets/user.png"
-                }
+                src={getUserAvatarSrc(user)}
                 alt="Profile"
                 width={40}
                 height={40}
                 className="w-8 h-8 rounded-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "/assets/user.png";
-                }}
+                onError={handleImageError}
               />
               <Image
                 src="/assets/chevron-down.png"
@@ -107,7 +94,6 @@ const HeaderComponent = () => {
               />
             </button>
 
-            {/* Dropdown Menu */}
             {isDropdownOpen && (
               <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[180px] z-50">
                 <div className="px-4 py-2 border-b border-gray-100">

@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import { CartItem as CartItemType } from "@/types/cart";
 import { useCart } from "@/contexts/CartContext";
-import { formatPrice } from "@/utils/cartUtils";
 
 interface CartItemProps {
   item: CartItemType;
@@ -41,7 +40,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
               {item?.name}
             </h3>
             <span className="text-[#10151F] font-semibold text-base">
-              {formatPrice(item?.total_price)}
+              ${item?.total_price.toFixed(2)}
             </span>
           </div>
 
@@ -59,7 +58,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleQuantityChange(item.quantity - 1)}
-              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-8 h-8 rounded-full border cursor-pointer border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={item.quantity <= 1 || itemIsLoading}>
               <span className="text-lg font-medium">−</span>
             </button>
@@ -70,7 +69,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
             <button
               onClick={() => handleQuantityChange(item.quantity + 1)}
-              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-8 h-8 rounded-full border cursor-pointer border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={itemIsLoading}>
               <span className="text-lg font-medium">+</span>
             </button>
@@ -78,7 +77,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
           <button
             onClick={handleRemove}
-            className="text-[#3E424A] cursor-pointer text-xs font-normal hover:underline transition-all duration-200">
+            className="text-[#3E424A] cursor-pointer text-xs font-normal">
             Remove
           </button>
         </div>

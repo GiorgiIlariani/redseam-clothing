@@ -1,4 +1,3 @@
-// Backend cart item response
 export interface CartItem {
   id: number;
   name: string;
@@ -32,7 +31,6 @@ export interface CartContextType {
   fetchCart: () => Promise<void>;
 }
 
-// API request interfaces
 export interface AddToCartRequest {
   color: string;
   quantity: number;

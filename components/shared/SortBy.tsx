@@ -1,43 +1,27 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
-
-interface SortByProps {
-  onSortChange: (sort: string) => void;
-  currentSort: string;
-}
+import { useDropdown } from "@/hooks/useDropdown";
+import { SortByProps } from "@/types/components";
+import { SORT_OPTIONS } from "@/utils/constants";
 
 const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const sortOptions = [
-    { value: "", label: "Sort by", isDefault: true },
-    { value: "-created_at", label: "New products first" },
-    { value: "price", label: "Price, low to high" },
-    { value: "-price", label: "Price, high to low" },
-  ];
+  const { isOpen, dropdownRef, toggleDropdown, closeDropdown } = useDropdown();
 
   const getCurrentSortLabel = () => {
-    const option = sortOptions.find((opt) => opt.value === currentSort);
+    const option = SORT_OPTIONS.find((opt) => opt.value === currentSort);
     return option ? option.label : "Sort By";
   };
 
-  // Close dropdown when clicking outside
-  useOutsideClick(dropdownRef, () => setIsOpen(false));
-
   const handleSortSelect = (sortValue: string) => {
     onSortChange(sortValue);
-    setIsOpen(false);
+    closeDropdown();
   };
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Sort Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-[80px] h-[40px] px-2 py-2 flex items-center justify-between text-left">
+        onClick={toggleDropdown}
+        className="w-auto h-[40px] gap-1 px-2 py-2 flex items-center justify-between text-left">
         <span className="text-gray-700 text-sm">{getCurrentSortLabel()}</span>
         <svg
           className={`w-4 h-4 transition-transform ${
@@ -55,16 +39,15 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
         </svg>
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
         <div
-          className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+          className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
           style={{
             width: "200px",
             paddingTop: "16px",
             paddingBottom: "16px",
           }}>
-          {sortOptions.map((option) => (
+          {SORT_OPTIONS.map((option) => (
             <button
               key={option.value}
               onClick={() =>
@@ -86,17 +69,8 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
                 paddingLeft: "16px",
               }}>
               <span
-                className="text-sm"
-                style={
-                  option.isDefault
-                    ? {
-                        fontFamily: "Poppins",
-                        fontWeight: 600,
-                        fontSize: "16px",
-                        lineHeight: "100%",
-                        letterSpacing: "0%",
-                      }
-                    : {}
+                className={
+                  option.isDefault ? "text-base font-semibold" : "text-sm"
                 }>
                 {option.label}
               </span>

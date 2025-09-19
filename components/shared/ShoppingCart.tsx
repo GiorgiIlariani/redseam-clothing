@@ -3,8 +3,8 @@
 import { useCart } from "@/contexts/CartContext";
 import Image from "next/image";
 import CartItem from "./CartItem";
-import { formatPrice } from "@/utils/cartUtils";
 import { useRouter } from "next/navigation";
+import { DELIVERY_COST, CART_SIDEBAR_WIDTH } from "@/utils/constants";
 
 const ShoppingCart = () => {
   const {
@@ -20,22 +20,25 @@ const ShoppingCart = () => {
 
   const handleGoToCheckout = () => {
     closeCart();
-    router.push('/checkout');
+    router.push("/checkout");
   };
 
   return (
     <>
+      {isCartOpen && (
+        <div className="fixed inset-0 bg-black/40 z-40" onClick={closeCart} />
+      )}
+
       <div
-        className={`fixed top-0 right-0 pt-[41px] px-10 pb-10 h-full bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 h-screen bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
-          width: "540px",
-          height: "1080px",
+          width: CART_SIDEBAR_WIDTH,
           borderLeftWidth: "1px",
           borderLeftColor: "#E5E7EB",
         }}>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-[41px] px-10 pb-6 flex-shrink-0">
           <h2 className="text-xl font-semibold text-[#10151F]">
             Shopping Cart ({cartItemsCount})
           </h2>
@@ -51,7 +54,7 @@ const ShoppingCart = () => {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto mt-[63px]">
+        <div className="flex-1 overflow-y-auto px-10 min-h-0">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
               <p className="text-red-700 text-sm">{error}</p>
@@ -93,14 +96,14 @@ const ShoppingCart = () => {
         </div>
 
         {cartItems.length > 0 && (
-          <div className="border-t border-gray-200 pt-6 mt-6">
+          <div className="pt-6 px-10 pb-10 flex-shrink-0">
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-base font-normal text-[#3E424A]">
                   Items subtotal:
                 </span>
                 <span className="text-base font-normal text-[#3E424A]">
-                  {formatPrice(cartTotal)}
+                  ${cartTotal.toFixed(2)}
                 </span>
               </div>
 
@@ -109,7 +112,7 @@ const ShoppingCart = () => {
                   Delivery:
                 </span>
                 <span className="text-base font-normal text-[#3E424A]">
-                  {formatPrice(5)}
+                  ${DELIVERY_COST.toFixed(2)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -117,15 +120,14 @@ const ShoppingCart = () => {
                   Total:
                 </span>
                 <span className="text-xl font-medium text-[#10151F]">
-                  {formatPrice(cartTotal + 5)}
+                  ${(cartTotal + DELIVERY_COST).toFixed(2)}
                 </span>
               </div>
             </div>
 
-            <button 
+            <button
               onClick={handleGoToCheckout}
-              className="w-full cursor-pointer bg-[#FF4000] text-white py-3 rounded-lg font-medium hover:bg-[#E63600] transition-colors duration-200 mt-[102px]"
-            >
+              className="w-full cursor-pointer bg-[#FF4000] text-white py-3 rounded-lg font-medium hover:bg-[#E63600] transition-colors duration-200 mt-[102px]">
               Go to checkout
             </button>
           </div>

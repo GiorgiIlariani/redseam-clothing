@@ -7,8 +7,11 @@ import { productsAPI } from "@/lib/productsApi";
 import { ProductDetail } from "@/types/products";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
+import { useDropdown } from "@/hooks/useDropdown";
+import { useProductSelection } from "@/hooks/useProductSelection";
 import ProductDetailSkeleton from "@/components/shared/ProductDetailSkeleton";
+import { getColorHex } from "@/utils/colorUtils";
+import { DEFAULT_QUANTITY_OPTIONS } from "@/utils/constants";
 
 const ProductPage = () => {
   const params = useParams();
@@ -16,41 +19,30 @@ const ProductPage = () => {
   const productId = params.id as string;
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState<string>("");
-  const [selectedColor, setSelectedColor] = useState<string>("");
-  const [selectedSize, setSelectedSize] = useState<string>("");
-  const [quantity, setQuantity] = useState<number>(1);
-  const [showQuantityDropdown, setShowQuantityDropdown] =
-    useState<boolean>(false);
-  const quantityDropdownRef = useRef<HTMLDivElement>(null);
   const { openCart, addToCart, isLoading, error } = useCart();
   const { isAuthenticated } = useAuth();
+  
+  const {
+    selectedImage,
+    selectedColor,
+    selectedSize,
+    quantity,
+    setSelectedImage,
+    setSelectedColor,
+    setSelectedSize,
+    handleColorChange,
+    handleImageChange,
+    handleSizeChange,
+    handleQuantityChange,
+  } = useProductSelection();
 
-  // Close quantity dropdown when clicking outside
-  useOutsideClick(quantityDropdownRef, () => setShowQuantityDropdown(false));
+  const {
+    isOpen: showQuantityDropdown,
+    dropdownRef: quantityDropdownRef,
+    toggleDropdown: toggleQuantityDropdown,
+    closeDropdown: closeQuantityDropdown,
+  } = useDropdown();
 
-  // Create color-image mapping (each color corresponds to an image by index)
-  const getImageForColor = (color: string): string => {
-    if (!product?.available_colors || !product?.images) return "";
-
-    const colorIndex = product.available_colors.indexOf(color);
-    if (colorIndex >= 0 && colorIndex < product.images.length) {
-      return product.images[colorIndex];
-    }
-    // Fallback to first image if mapping doesn't exist
-    return product.images[0] || "";
-  };
-
-  const getColorForImage = (image: string): string => {
-    if (!product?.available_colors || !product?.images) return "";
-
-    const imageIndex = product.images.indexOf(image);
-    if (imageIndex >= 0 && imageIndex < product.available_colors.length) {
-      return product.available_colors[imageIndex];
-    }
-    // Fallback to first color if mapping doesn't exist
-    return product.available_colors[0] || "";
-  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -82,45 +74,20 @@ const ProductPage = () => {
     }
   }, [productId]);
 
-  // Color mapping for display
-  const getColorHex = (colorName: string): string => {
-    const colorMap: { [key: string]: string } = {
-      Black: "#000000",
-      "Navy Blue": "#1e3a8a",
-      Green: "#16a34a",
-      Purple: "#9333ea",
-      Peach: "#fdba74",
-      Brown: "#92400e",
-      Olive: "#65a30d",
-      Blue: "#2563eb",
-      Grey: "#6b7280",
-      Gray: "#6b7280",
-      Red: "#dc2626",
-      White: "#ffffff",
-    };
-    return colorMap[colorName] || "#6b7280";
-  };
-
   const handleQuantitySelect = (newQuantity: number) => {
-    setQuantity(newQuantity);
-    setShowQuantityDropdown(false);
+    handleQuantityChange(newQuantity);
+    closeQuantityDropdown();
   };
 
-  const handleColorChange = (color: string) => {
-    setSelectedColor(color);
-    // Sync image with color selection
-    const correspondingImage = getImageForColor(color);
-    if (correspondingImage) {
-      setSelectedImage(correspondingImage);
+  const handleProductColorChange = (color: string) => {
+    if (product?.available_colors && product?.images) {
+      handleColorChange(color, product.available_colors, product.images);
     }
   };
 
-  const handleImageChange = (image: string) => {
-    setSelectedImage(image);
-    // Sync color with image selection
-    const correspondingColor = getColorForImage(image);
-    if (correspondingColor) {
-      setSelectedColor(correspondingColor);
+  const handleProductImageChange = (image: string) => {
+    if (product?.available_colors && product?.images) {
+      handleImageChange(image, product.available_colors, product.images);
     }
   };
 
@@ -183,7 +150,7 @@ const ProductPage = () => {
                     ? "border-[#FF4000]"
                     : "border-gray-200"
                 }`}
-                onClick={() => handleImageChange(image)}>
+                onClick={() => handleProductImageChange(image)}>
                 <Image
                   src={image}
                   alt={`${product.name} image ${index + 1}`}
@@ -226,7 +193,7 @@ const ProductPage = () => {
                 {product.available_colors?.map((color) => (
                   <button
                     key={color}
-                    onClick={() => handleColorChange(color)}
+                    onClick={() => handleProductColorChange(color)}
                     className={`w-8 h-8 rounded-full border-2 ${
                       selectedColor === color
                         ? "border-[#FF4000]"
@@ -247,7 +214,7 @@ const ProductPage = () => {
                   product.available_sizes.map((size) => (
                     <button
                       key={size}
-                      onClick={() => setSelectedSize(size)}
+                      onClick={() => handleSizeChange(size)}
                       className={`border ${
                         selectedSize === size
                           ? "border-[#FF4000] bg-[#FF4000] text-white"
@@ -263,14 +230,7 @@ const ProductPage = () => {
                         borderRadius: "10px",
                         borderWidth: "1px",
                       }}>
-                      <span
-                        style={{
-                          fontFamily: "Poppins",
-                          fontWeight: 400,
-                          fontSize: "16px",
-                          lineHeight: "100%",
-                          letterSpacing: "0%",
-                        }}>
+                      <span className="text-base">
                         {size}
                       </span>
                     </button>
@@ -287,7 +247,7 @@ const ProductPage = () => {
               </span>
               <div className="relative w-fit" ref={quantityDropdownRef}>
                 <button
-                  onClick={() => setShowQuantityDropdown(!showQuantityDropdown)}
+                  onClick={toggleQuantityDropdown}
                   className="w-[70px] h-[42px] px-4 py-[9px] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between text-left">
                   <span className="text-gray-700 text-sm">{quantity}</span>
                   <Image
@@ -303,7 +263,7 @@ const ProductPage = () => {
 
                 {showQuantityDropdown && (
                   <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-[70px] max-h-[200px] overflow-y-auto">
-                    {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+                    {DEFAULT_QUANTITY_OPTIONS.map((num) => (
                       <button
                         key={num}
                         onClick={() => handleQuantitySelect(num)}

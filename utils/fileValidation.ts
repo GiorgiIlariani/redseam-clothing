@@ -1,4 +1,3 @@
-// File validation constants
 export const VALID_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg", 
@@ -7,15 +6,12 @@ export const VALID_IMAGE_TYPES = [
   "image/webp",
 ];
 
-export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
-// File validation result interface
+export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export interface FileValidationResult {
   isValid: boolean;
   error?: string;
 }
 
-// Validate file type
 export const validateFileType = (file: File): FileValidationResult => {
   if (!VALID_IMAGE_TYPES.includes(file.type)) {
     return {
@@ -26,7 +22,6 @@ export const validateFileType = (file: File): FileValidationResult => {
   return { isValid: true };
 };
 
-// Validate file size
 export const validateFileSize = (file: File): FileValidationResult => {
   if (file.size > MAX_FILE_SIZE) {
     return {
@@ -37,15 +32,12 @@ export const validateFileSize = (file: File): FileValidationResult => {
   return { isValid: true };
 };
 
-// Complete file validation
 export const validateImageFile = (file: File): FileValidationResult => {
-  // Check file type first
   const typeValidation = validateFileType(file);
   if (!typeValidation.isValid) {
     return typeValidation;
   }
   
-  // Check file size
   const sizeValidation = validateFileSize(file);
   if (!sizeValidation.isValid) {
     return sizeValidation;
@@ -54,7 +46,6 @@ export const validateImageFile = (file: File): FileValidationResult => {
   return { isValid: true };
 };
 
-// Convert file to base64 data URL
 export const fileToDataURL = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

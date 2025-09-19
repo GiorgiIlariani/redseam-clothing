@@ -1,6 +1,6 @@
 import { User, AuthResponse, LoginData, RegisterData } from "@/types/auth";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const authAPI = {
   async login(data: LoginData): Promise<AuthResponse> {
@@ -28,7 +28,6 @@ export const authAPI = {
 
     const result: AuthResponse = await response.json();
     
-    // Store token in localStorage
     localStorage.setItem('auth_token', result.token);
     localStorage.setItem('user_data', JSON.stringify(result.user));
     
@@ -62,7 +61,6 @@ export const authAPI = {
         case 401:
           throw new Error('Registration failed');
         case 422:
-          // Handle validation errors
           if (errorData.errors) {
             const errors = errorData.errors;
             if (errors.email) throw new Error(`Email: ${errors.email[0]}`);
@@ -77,7 +75,6 @@ export const authAPI = {
 
     const result: AuthResponse = await response.json();
     
-    // Store token in localStorage
     localStorage.setItem('auth_token', result.token);
     localStorage.setItem('user_data', JSON.stringify(result.user));
     

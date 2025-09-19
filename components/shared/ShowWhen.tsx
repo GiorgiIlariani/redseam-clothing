@@ -1,10 +1,9 @@
 "use client";
 
 import { ReactNode } from "react";
+import { ShowWhenProps } from "@/types/components";
 
-interface ShowWhenProps {
-  condition: boolean;
-  children: ReactNode;
+interface ExtendedShowWhenProps extends ShowWhenProps {
   fallback?: ReactNode;
 }
 
@@ -12,6 +11,6 @@ export const ShowWhen = ({
   condition,
   children,
   fallback = null,
-}: ShowWhenProps) => {
+}: ExtendedShowWhenProps) => {
   return <>{condition ? children : fallback}</>;
 };

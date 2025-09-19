@@ -51,5 +51,5 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   logout: () => void;
-  refreshUser: () => void;
+  setUser: (user: User) => void;
 }

@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@layer base {
+  :root {
+    --font-poppins: 'Poppins', sans-serif;
+  }
+  
+  body {
+    font-family: var(--font-poppins);
+  }
+}
+
 /* Required field asterisk styling */
 .placeholder-asterisk::after {
   content: "*";

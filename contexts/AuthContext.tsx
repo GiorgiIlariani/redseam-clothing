@@ -22,18 +22,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const refreshUser = () => {
-    const currentUser = authAPI.getCurrentUser();
-    setUser(currentUser);
-  };
-
   const logout = () => {
     authAPI.logout();
     setUser(null);
   };
 
   useEffect(() => {
-    refreshUser();
+    const currentUser = authAPI.getCurrentUser();
+    setUser(currentUser);
     setIsLoading(false);
   }, []);
 
@@ -42,7 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     isLoading,
     logout,
-    refreshUser,
+    setUser,
   };
 
   return (

@@ -1,10 +1,5 @@
 import { useEffect, RefObject } from 'react';
 
-/**
- * Custom hook to handle clicks outside of a referenced element
- * @param ref - React ref object pointing to the element
- * @param callback - Function to call when clicking outside
- */
 export const useOutsideClick = (
   ref: RefObject<HTMLElement | null>,
   callback: () => void

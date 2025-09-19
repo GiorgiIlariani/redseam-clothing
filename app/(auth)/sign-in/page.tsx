@@ -8,17 +8,16 @@ import { authAPI } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { SignInFormData, FormErrors } from "@/types/auth";
 import { validateSignInForm, hasFormErrors } from "@/utils/validation";
-import { setFormErrorFromApiError } from "@/utils/errorHandling";
 import { createFieldChangeHandler } from "@/utils/inputHelpers";
 
 const SignInPage = () => {
   const router = useRouter();
-  const { refreshUser } = useAuth();
+  const { setUser } = useAuth();
   const [formData, setFormData] = useState<SignInFormData>({
     email: "",
     password: "",
   });
-  
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [generalError, setGeneralError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,31 +28,34 @@ const SignInPage = () => {
     return !hasFormErrors(newErrors);
   };
 
-  const handleInputChange = createFieldChangeHandler<SignInFormData, FormErrors>(setFormData, setErrors);
+  const handleInputChange = createFieldChangeHandler<
+    SignInFormData,
+    FormErrors
+  >(setFormData, setErrors);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
-      await authAPI.login({
+      const result = await authAPI.login({
         email: formData.email,
-        password: formData.password
+        password: formData.password,
       });
-      
-      refreshUser();
-      router.push('/');
+
+      setUser(result.user);
+      router.push("/");
     } catch (error) {
       console.error("Login error:", error);
       if (error instanceof Error) {
         setGeneralError(error.message);
       } else {
-        setGeneralError('Login failed. Please try again.');
+        setGeneralError("Login failed. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -71,17 +73,17 @@ const SignInPage = () => {
               <p className="text-red-700 text-sm text-center">{generalError}</p>
             </div>
           )}
-          
+
           <div className="flex flex-col gap-4">
-            <Input 
+            <Input
               variant="email"
               value={formData.email}
               onChange={handleInputChange("email")}
               error={errors.email}
               required
             />
-            <Input 
-              variant="password" 
+            <Input
+              variant="password"
               value={formData.password}
               onChange={handleInputChange("password")}
               error={errors.password}
@@ -89,16 +91,17 @@ const SignInPage = () => {
             />
           </div>
           <div className="flex flex-col items-center gap-6">
-            <button 
+            <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#FF4000] text-white text-sm font-normal py-[10px] rounded-[10px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E63600] transition-colors duration-200"
-            >
+              className="w-full bg-[#FF4000] text-white text-sm font-normal py-[10px] rounded-[10px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E63600] transition-colors duration-200">
               {isLoading ? "Signing In..." : "Log In"}
             </button>
             <div className="flex gap-2 items-center text-[#000000] text-sm font-normal">
               Not a member?
-              <Link href="/sign-up" className="font-medium text-[#FF4000] hover:text-[#E63600] transition-colors duration-200">
+              <Link
+                href="/sign-up"
+                className="font-medium text-[#FF4000] hover:text-[#E63600] transition-colors duration-200">
                 Register
               </Link>
             </div>

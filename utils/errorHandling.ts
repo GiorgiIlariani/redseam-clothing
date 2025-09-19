@@ -1,6 +1,5 @@
 import { FormErrors } from "@/types/auth";
 
-// Error message parsing utilities
 export const parseAuthErrorMessage = (errorMessage: string): { field: keyof FormErrors; message: string } | null => {
   if (errorMessage.includes('Email:')) {
     return { field: 'email', message: errorMessage.replace('Email: ', '') };
@@ -14,7 +13,6 @@ export const parseAuthErrorMessage = (errorMessage: string): { field: keyof Form
   return null;
 };
 
-// Set form errors from API error
 export const setFormErrorFromApiError = (error: unknown): FormErrors => {
   if (error instanceof Error) {
     const parsedError = parseAuthErrorMessage(error.message);
@@ -26,7 +24,6 @@ export const setFormErrorFromApiError = (error: unknown): FormErrors => {
   return { email: "An unexpected error occurred. Please try again." };
 };
 
-// Generic API error handler
 export const handleApiError = (error: unknown, fallbackMessage: string = "An error occurred"): string => {
   if (error instanceof Error) {
     return error.message;
@@ -34,7 +31,6 @@ export const handleApiError = (error: unknown, fallbackMessage: string = "An err
   return fallbackMessage;
 };
 
-// Validation error handler for API responses
 export const handleValidationErrors = (errorData: any): string => {
   if (errorData.errors) {
     const errors = errorData.errors;
@@ -45,7 +41,6 @@ export const handleValidationErrors = (errorData: any): string => {
   return errorData.message || 'Validation error';
 };
 
-// HTTP status code error messages
 export const getHttpErrorMessage = (status: number, context: 'login' | 'register' = 'login'): string => {
   switch (status) {
     case 401:

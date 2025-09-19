@@ -6,20 +6,26 @@ import { ProductsResponse } from "@/types/products";
 import ProductCard from "@/components/shared/ProductCard";
 import Pagination from "@/components/shared/Pagination";
 import ProductCardSkeleton from "@/components/shared/ProductCardSkeleton";
-import PriceFilter, { PriceFilterRef } from "@/components/shared/PriceFilter";
+import PriceFilter from "@/components/shared/PriceFilter";
 import SortBy from "@/components/shared/SortBy";
 import Image from "next/image";
+import { useProductFilters } from "@/hooks/useProductFilters";
+import { PRODUCT_GRID_SKELETON_COUNT } from "@/utils/constants";
+import { PriceFilterRef } from "@/types/components";
 
 const HomePage = () => {
   const [products, setProducts] = useState<ProductsResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [priceFilter, setPriceFilter] = useState<{
-    min: number | null;
-    max: number | null;
-  }>({ min: null, max: null });
-  const [sortBy, setSortBy] = useState("");
   const priceFilterRef = useRef<PriceFilterRef>(null);
+  const {
+    currentPage,
+    priceFilter,
+    sortBy,
+    handlePageChange,
+    handlePriceChange,
+    handleSortChange,
+    clearPriceFilter,
+  } = useProductFilters();
 
   const fetchProducts = async (page: number = 1) => {
     try {
@@ -45,20 +51,6 @@ const HomePage = () => {
     fetchProducts(currentPage);
   }, [currentPage, priceFilter, sortBy]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handlePriceChange = (min: number | null, max: number | null) => {
-    setPriceFilter({ min, max });
-    setCurrentPage(1);
-  };
-
-  const handleSortChange = (sort: string) => {
-    setSortBy(sort);
-    setCurrentPage(1);
-  };
-
   return (
     <main className="w-full mt-[72px] px-[100px]">
       <div className="flex items-center justify-between w-full">
@@ -71,8 +63,8 @@ const HomePage = () => {
             </span>
           )}
           <div className="border border-[#E1DFE1] w-[1px] h-[14px] mx-4" />
-          <SortBy onSortChange={handleSortChange} currentSort={sortBy} />
           <PriceFilter ref={priceFilterRef} onPriceChange={handlePriceChange} />
+          <SortBy onSortChange={handleSortChange} currentSort={sortBy} />
         </div>
       </div>
 
@@ -81,7 +73,6 @@ const HomePage = () => {
           <div
             className="flex items-center bg-white border border-gray-300 text-gray-700 text-sm"
             style={{
-              width: "141px",
               height: "37px",
               paddingTop: "8px",
               paddingRight: "10px",
@@ -96,8 +87,7 @@ const HomePage = () => {
             </span>
             <button
               onClick={() => {
-                setPriceFilter({ min: null, max: null });
-                setCurrentPage(1);
+                clearPriceFilter();
                 priceFilterRef.current?.clearInputs();
               }}
               className="ml-auto cursor-pointer hover:opacity-70 transition-opacity">
@@ -113,7 +103,7 @@ const HomePage = () => {
       </div>
 
       <div
-        className="grid grid-cols-3 gap-x-6 gap-y-12"
+        className="grid grid-cols-4 gap-x-6 gap-y-12"
         style={{
           marginTop:
             priceFilter.min !== null || priceFilter.max !== null
@@ -122,9 +112,11 @@ const HomePage = () => {
         }}>
         {loading ? (
           <>
-            {Array.from({ length: 9 }).map((_, index) => (
-              <ProductCardSkeleton key={index} />
-            ))}
+            {Array.from({ length: PRODUCT_GRID_SKELETON_COUNT }).map(
+              (_, index) => (
+                <ProductCardSkeleton key={index} />
+              )
+            )}
           </>
         ) : (
           products?.data.map((product) => (

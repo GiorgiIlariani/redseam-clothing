@@ -1,15 +1,11 @@
 import { FormErrors } from "@/types/auth";
 
-// Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Validation rules
 export const VALIDATION_RULES = {
   MIN_LENGTH: 3,
   EMAIL_REGEX,
 };
 
-// Individual field validators
 export const validateEmail = (email: string): string | undefined => {
   if (!email.trim()) {
     return "Email is required";
@@ -53,7 +49,6 @@ export const validateConfirmPassword = (password: string, confirmPassword: strin
   return undefined;
 };
 
-// Form validation functions
 export const validateSignInForm = (email: string, password: string): FormErrors => {
   const errors: FormErrors = {};
   
@@ -89,7 +84,6 @@ export const validateSignUpForm = (
   return errors;
 };
 
-// Check if form has errors
 export const hasFormErrors = (errors: FormErrors): boolean => {
   return Object.keys(errors).length > 0;
 };

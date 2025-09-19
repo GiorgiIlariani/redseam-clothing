@@ -14,7 +14,7 @@ import { createFieldChangeHandler } from "@/utils/inputHelpers";
 
 const SignUpPage = () => {
   const router = useRouter();
-  const { refreshUser } = useAuth();
+  const { setUser } = useAuth();
   const [formData, setFormData] = useState<SignUpFormData>({
     username: "",
     email: "",
@@ -89,7 +89,7 @@ const SignUpPage = () => {
     setIsLoading(true);
 
     try {
-      await authAPI.register({
+      const result = await authAPI.register({
         username: formData.username,
         email: formData.email,
         password: formData.password,
@@ -97,7 +97,7 @@ const SignUpPage = () => {
         avatar: formData.avatar
       });
 
-      refreshUser();
+      setUser(result.user);
       router.push('/');
     } catch (error) {
       console.error("Registration error:", error);

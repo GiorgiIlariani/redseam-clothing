@@ -78,15 +78,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange, error }) => {
             <button
               type="button"
               onClick={handleUploadClick}
-              className="text-[#3E424A] cursor-pointer focus:outline-none"
-              style={{
-                fontFamily: "Poppins, sans-serif",
-                fontWeight: 400,
-                fontSize: "14px",
-                lineHeight: "100%",
-                letterSpacing: "0%",
-                textAlign: "center",
-              }}>
+              className="text-[#3E424A] cursor-pointer focus:outline-none text-sm text-center">
               Upload Image
             </button>
           ) : (
@@ -94,29 +86,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange, error }) => {
               <button
                 type="button"
                 onClick={handleUploadClick}
-                className="text-[#3E424A] cursor-pointer focus:outline-none"
-                style={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: 400,
-                  fontSize: "14px",
-                  lineHeight: "100%",
-                  letterSpacing: "0%",
-                  textAlign: "center",
-                }}>
+                className="text-[#3E424A] cursor-pointer focus:outline-none text-sm text-center">
                 Upload New
               </button>
               <button
                 type="button"
                 onClick={handleRemoveImage}
-                className="text-red-500 cursor-pointer hover:text-red-600 transition-colors duration-200 focus:outline-none"
-                style={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: 400,
-                  fontSize: "14px",
-                  lineHeight: "100%",
-                  letterSpacing: "0%",
-                  textAlign: "center",
-                }}>
+                className="text-red-500 cursor-pointer hover:text-red-600 transition-colors duration-200 focus:outline-none text-sm text-center">
                 Remove
               </button>
             </div>

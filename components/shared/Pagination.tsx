@@ -1,12 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { getVisiblePages, isPageNumber } from "@/utils/pagination";
-
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
+import { PaginationProps } from "@/types/components";
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
