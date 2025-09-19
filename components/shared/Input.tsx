@@ -45,7 +45,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               transition-all 
               duration-200
               ${required ? `placeholder-asterisk ${isPassword ? 'has-password-toggle' : ''}` : ''}
-              ${className || 'w-[554px]'}
+              ${className || 'w-full'}
             `}
             style={{
               fontSize: "14px",

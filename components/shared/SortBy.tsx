@@ -40,13 +40,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
       </button>
 
       {isOpen && (
-        <div
-          className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
-          style={{
-            width: "200px",
-            paddingTop: "16px",
-            paddingBottom: "16px",
-          }}>
+        <div className="absolute top-full left-0 sm:right-0 sm:left-auto mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden w-48 sm:w-[200px] py-4">
           {SORT_OPTIONS.map((option) => (
             <button
               key={option.value}
@@ -54,20 +48,13 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
                 option.isDefault ? null : handleSortSelect(option.value)
               }
               disabled={option.isDefault}
-              className={`w-full text-left transition-colors ${
+              className={`w-full text-left transition-colors h-10 px-3 sm:px-4 ${
                 option.isDefault
                   ? "cursor-default text-[#10151F]"
                   : currentSort === option.value
                   ? "bg-[#FF4000] text-white"
                   : "hover:bg-gray-50 text-gray-700"
-              }`}
-              style={{
-                height: "40px",
-                paddingTop: "8px",
-                paddingRight: "16px",
-                paddingBottom: "8px",
-                paddingLeft: "16px",
-              }}>
+              }`}>
               <span
                 className={
                   option.isDefault ? "text-base font-semibold" : "text-sm"

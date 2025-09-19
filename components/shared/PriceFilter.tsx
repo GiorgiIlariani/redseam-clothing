@@ -48,20 +48,12 @@ const PriceFilter = forwardRef<PriceFilterRef, PriceFilterProps>(
         </button>
 
         {isOpen && (
-          <div
-            className="absolute top-full right-0 mt-2 bg-white border border-gray-200 shadow-lg z-10"
-            style={{
-              width: "392px",
-              borderRadius: "8px",
-              borderWidth: "1px",
-              padding: "16px",
-              gap: "20px",
-            }}>
-            <div style={{ marginBottom: "20px" }}>
+          <div className="absolute top-full left-0 sm:right-0 sm:left-auto mt-2 bg-white border border-gray-200 shadow-lg z-10 w-[calc(100vw-2rem)] sm:w-[392px] max-w-[392px] rounded-lg p-4">
+            <div className="mb-5">
               <h3 className="text-[#10151F] text-base font-semibold">Price</h3>
             </div>
 
-            <div className="flex" style={{ gap: "10px", marginBottom: "20px" }}>
+            <div className="flex gap-2 sm:gap-[10px] mb-5">
               <div className="flex-1">
                 <input
                   type="number"
@@ -69,7 +61,6 @@ const PriceFilter = forwardRef<PriceFilterRef, PriceFilterProps>(
                   value={fromPrice}
                   onChange={(e) => setFromPrice(e.target.value)}
                   className="w-full h-[42px] px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF4000]/20 focus:border-[#FF4000]"
-                  style={{ width: "175px" }}
                 />
               </div>
               <div className="flex-1">
@@ -79,12 +70,11 @@ const PriceFilter = forwardRef<PriceFilterRef, PriceFilterProps>(
                   value={toPrice}
                   onChange={(e) => setToPrice(e.target.value)}
                   className="w-full h-[42px] px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF4000]/20 focus:border-[#FF4000]"
-                  style={{ width: "175px" }}
                 />
               </div>
             </div>
 
-            <div className="flex justify-end pr-4" style={{ gap: "20px" }}>
+            <div className="flex justify-end gap-4 sm:gap-5">
               <button
                 onClick={handleClearFilter}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors cursor-pointer">
