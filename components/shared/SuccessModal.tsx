@@ -70,16 +70,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           </p>
           <button
             onClick={handleContinueShopping}
-            className="bg-[#FF4000] cursor-pointer text-white font-medium hover:bg-[#E63600] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4000]/20 focus:ring-offset-2 shadow-lg hover:shadow-xl"
-            style={{
-              width: "214px",
-              height: "41px",
-              borderRadius: "10px",
-              paddingTop: "10px",
-              paddingRight: "20px",
-              paddingBottom: "10px",
-              paddingLeft: "20px",
-            }}>
+            className="bg-[#FF4000] cursor-pointer text-white font-medium hover:bg-[#E63600] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4000]/20 focus:ring-offset-2 shadow-lg hover:shadow-xl w-full sm:w-[214px] h-[41px] rounded-[10px] px-5 py-[10px]">
             {buttonText}
           </button>
         </div>
