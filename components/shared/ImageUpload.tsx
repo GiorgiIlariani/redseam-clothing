@@ -5,7 +5,7 @@ import React, { useState, useRef } from "react";
 import { ImageUploadProps } from "@/types/components";
 import { validateImageFile, fileToDataURL } from "@/utils/fileValidation";
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange, error }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
