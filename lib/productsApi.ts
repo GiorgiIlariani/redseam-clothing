@@ -1,4 +1,4 @@
-import { Product, ProductDetail, ProductsResponse, ProductsApiParams } from "@/types/products";
+import { ProductDetail, ProductsResponse, ProductsApiParams } from "@/types/products";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.example.com';
 

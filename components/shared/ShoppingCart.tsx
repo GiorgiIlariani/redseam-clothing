@@ -4,7 +4,7 @@ import { useCart } from "@/contexts/CartContext";
 import Image from "next/image";
 import CartItem from "./CartItem";
 import { useRouter } from "next/navigation";
-import { DELIVERY_COST, CART_SIDEBAR_WIDTH } from "@/utils/constants";
+import { DELIVERY_COST } from "@/utils/constants";
 
 const ShoppingCart = () => {
   const {
@@ -77,7 +77,7 @@ const ShoppingCart = () => {
                 Ooops!
               </strong>
               <p className="text-[#3E424A] text-sm font-normal mt-[10px]">
-                You've got nothing in your cart just yet...
+                You&apos;ve got nothing in your cart just yet...
               </p>
 
               <button

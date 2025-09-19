@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { productsAPI } from "@/lib/productsApi";
@@ -72,7 +72,7 @@ const ProductPage = () => {
     if (productId) {
       fetchProduct();
     }
-  }, [productId]);
+  }, [productId, setSelectedImage, setSelectedColor, setSelectedSize]);
 
   const handleQuantitySelect = (newQuantity: number) => {
     handleQuantityChange(newQuantity);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { productsAPI } from "@/lib/productsApi";
 import { ProductsResponse } from "@/types/products";
 import ProductCard from "@/components/shared/ProductCard";
@@ -27,7 +27,7 @@ const HomePage = () => {
     clearPriceFilter,
   } = useProductFilters();
 
-  const fetchProducts = async (page: number = 1) => {
+  const fetchProducts = useCallback(async (page: number = 1) => {
     try {
       setLoading(true);
       const result = await productsAPI.getProducts({
@@ -45,11 +45,11 @@ const HomePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [sortBy, priceFilter]);
 
   useEffect(() => {
     fetchProducts(currentPage);
-  }, [currentPage, priceFilter, sortBy]);
+  }, [currentPage, fetchProducts]);
 
   return (
     <main className="w-full mt-16 sm:mt-[72px] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px]">

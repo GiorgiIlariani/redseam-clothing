@@ -5,7 +5,7 @@ import { InputProps } from "@/types/components";
 import { getInputPlaceholder, getInputType, isPasswordField } from "@/utils/inputHelpers";
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ error, variant = "default", className = "", label, required, ...props }, ref) => {
+  ({ error, variant = "default", className = "", required, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const placeholder = getInputPlaceholder(variant, props.placeholder);

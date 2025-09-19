@@ -10,7 +10,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { SignUpFormData, FormErrors } from "@/types/auth";
 import { validateSignUpForm, hasFormErrors } from "@/utils/validation";
 import { setFormErrorFromApiError } from "@/utils/errorHandling";
-import { createFieldChangeHandler } from "@/utils/inputHelpers";
 
 const SignUpPage = () => {
   const router = useRouter();
