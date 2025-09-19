@@ -23,8 +23,8 @@ const HeaderComponent = () => {
     <header className="flex items-center justify-between px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px] h-16 sm:h-20">
       <Link className="flex items-center gap-1" href="/">
         <Image
-          src="/assets/handEye.png"
-          alt="handEye"
+          src="/assets/HandEye.png"
+          alt="HandEye"
           width={24}
           height={24}
           className="w-6 h-6"
