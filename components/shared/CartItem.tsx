@@ -49,7 +49,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
           <div className="flex flex-col gap-1">
             <span className="text-[#3E424A] text-sm font-normal">
-              {/* {item?.brand?.name} */}
+              {item?.color}
             </span>
             <span className="text-[#3E424A] text-sm font-normal">
               {item?.size}

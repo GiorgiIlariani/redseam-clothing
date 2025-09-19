@@ -99,4 +99,26 @@ export const cartAPI = {
 
     // 204 No Content - successful deletion
   },
+
+  // POST /cart/checkout - Checkout cart
+  async checkout(): Promise<{ message: string }> {
+    const response = await fetch(`${API_BASE_URL}/cart/checkout`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Authentication required');
+      }
+      if (response.status === 400) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Bad request');
+      }
+      throw new Error(`Checkout failed: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  },
 };

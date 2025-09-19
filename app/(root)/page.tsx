@@ -114,7 +114,7 @@ const HomePage = () => {
       </div>
 
       <div
-        className="grid grid-cols-4 gap-x-6 gap-y-12"
+        className="grid grid-cols-3 gap-x-6 gap-y-12"
         style={{
           marginTop:
             priceFilter.min !== null || priceFilter.max !== null
@@ -123,7 +123,7 @@ const HomePage = () => {
         }}>
         {loading ? (
           <>
-            {Array.from({ length: 8 }).map((_, index) => (
+            {Array.from({ length: 9 }).map((_, index) => (
               <ProductCardSkeleton key={index} />
             ))}
           </>

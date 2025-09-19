@@ -21,6 +21,29 @@ const ProductPage = () => {
   const quantityDropdownRef = useRef<HTMLDivElement>(null);
   const { openCart, addToCart, isLoading, error } = useCart();
 
+  // Create color-image mapping (each color corresponds to an image by index)
+  const getImageForColor = (color: string): string => {
+    if (!product?.available_colors || !product?.images) return "";
+    
+    const colorIndex = product.available_colors.indexOf(color);
+    if (colorIndex >= 0 && colorIndex < product.images.length) {
+      return product.images[colorIndex];
+    }
+    // Fallback to first image if mapping doesn't exist
+    return product.images[0] || "";
+  };
+
+  const getColorForImage = (image: string): string => {
+    if (!product?.available_colors || !product?.images) return "";
+    
+    const imageIndex = product.images.indexOf(image);
+    if (imageIndex >= 0 && imageIndex < product.available_colors.length) {
+      return product.available_colors[imageIndex];
+    }
+    // Fallback to first color if mapping doesn't exist
+    return product.available_colors[0] || "";
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -76,6 +99,24 @@ const ProductPage = () => {
     setShowQuantityDropdown(false);
   };
 
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+    // Sync image with color selection
+    const correspondingImage = getImageForColor(color);
+    if (correspondingImage) {
+      setSelectedImage(correspondingImage);
+    }
+  };
+
+  const handleImageChange = (image: string) => {
+    setSelectedImage(image);
+    // Sync color with image selection
+    const correspondingColor = getColorForImage(image);
+    if (correspondingColor) {
+      setSelectedColor(correspondingColor);
+    }
+  };
+
   const handleAddToCart = async () => {
     if (!product) return;
 
@@ -125,7 +166,7 @@ const ProductPage = () => {
                     ? "border-[#FF4000]"
                     : "border-gray-200"
                 }`}
-                onClick={() => setSelectedImage(image)}>
+                onClick={() => handleImageChange(image)}>
                 <Image
                   src={image}
                   alt={`${product.name} image ${index + 1}`}
@@ -170,7 +211,7 @@ const ProductPage = () => {
                 {product.available_colors?.map((color) => (
                   <button
                     key={color}
-                    onClick={() => setSelectedColor(color)}
+                    onClick={() => handleColorChange(color)}
                     className={`w-8 h-8 rounded-full border-2 ${
                       selectedColor === color
                         ? "border-[#FF4000]"

@@ -64,8 +64,9 @@ const SignInPage = () => {
         <form onSubmit={handleSubmit} className="flex flex-col gap-[46px]">
           <div className="flex flex-col gap-4">
             <Input 
-              variant="email" 
-              label="Email" 
+              variant="default" 
+              label="Email or Username" 
+              placeholder="Enter your email or username"
               value={formData.email}
               onChange={handleInputChange("email")}
               error={errors.email}
