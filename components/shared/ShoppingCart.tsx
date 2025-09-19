@@ -25,7 +25,6 @@ const ShoppingCart = () => {
 
   return (
     <>
-      {/* Cart Sidebar */}
       <div
         className={`fixed top-0 right-0 pt-[41px] px-10 pb-10 h-full bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
           isCartOpen ? "translate-x-0" : "translate-x-full"
@@ -36,7 +35,6 @@ const ShoppingCart = () => {
           borderLeftWidth: "1px",
           borderLeftColor: "#E5E7EB",
         }}>
-        {/* Cart Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-[#10151F]">
             Shopping Cart ({cartItemsCount})
@@ -53,22 +51,18 @@ const ShoppingCart = () => {
           </button>
         </div>
 
-        {/* Cart Content */}
         <div className="flex-1 overflow-y-auto mt-[63px]">
-          {/* Error State */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
               <p className="text-red-700 text-sm">{error}</p>
             </div>
           )}
 
-          {/* Loading State */}
           {isLoading && cartItems.length === 0 ? (
             <div className="flex justify-center items-center pt-[151px]">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4000]"></div>
             </div>
           ) : cartItems.length === 0 ? (
-            /* Empty Cart State */
             <div className="flex flex-col justify-center items-center pt-[151px]">
               <Image
                 src="/assets/no-cart-item.png"
@@ -90,7 +84,6 @@ const ShoppingCart = () => {
               </button>
             </div>
           ) : (
-            /* Cart Items */
             <div className="flex flex-col">
               {cartItems.map((item) => (
                 <CartItem key={item.id} item={item} />
@@ -99,7 +92,6 @@ const ShoppingCart = () => {
           )}
         </div>
 
-        {/* Cart Footer - Show only when there are items */}
         {cartItems.length > 0 && (
           <div className="border-t border-gray-200 pt-6 mt-6">
             <div className="flex flex-col gap-4">

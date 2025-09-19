@@ -23,17 +23,6 @@ export const validateEmail = (email: string): string | undefined => {
   return undefined;
 };
 
-export const validateEmailOrUsername = (value: string): string | undefined => {
-  if (!value.trim()) {
-    return "Email or username is required";
-  }
-  if (value.length < VALIDATION_RULES.MIN_LENGTH) {
-    return "Must be at least 3 characters";
-  }
-  // Accept both email format and username format (no specific validation for username)
-  return undefined;
-};
-
 export const validatePassword = (password: string): string | undefined => {
   if (!password.trim()) {
     return "Password is required";
@@ -68,7 +57,7 @@ export const validateConfirmPassword = (password: string, confirmPassword: strin
 export const validateSignInForm = (email: string, password: string): FormErrors => {
   const errors: FormErrors = {};
   
-  const emailError = validateEmailOrUsername(email);
+  const emailError = validateEmail(email);
   if (emailError) errors.email = emailError;
   
   const passwordError = validatePassword(password);

@@ -21,10 +21,8 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     removeFromCart(item.id);
   };
 
-  console.log({ item });
   return (
     <div className="flex gap-4 py-4">
-      {/* Product Image */}
       <div className="flex-shrink-0">
         <Image
           src={item.cover_image}
@@ -35,7 +33,6 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         />
       </div>
 
-      {/* Product Details */}
       <div className="flex-1 flex flex-col gap-[13px]">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
@@ -58,7 +55,6 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         </div>
 
         <div className="flex items-center justify-between">
-          {/* Quantity Controls */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleQuantityChange(item.quantity - 1)}
@@ -79,7 +75,6 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
             </button>
           </div>
 
-          {/* Remove Button */}
           <button
             onClick={handleRemove}
             className="text-[#FF4000] text-sm font-normal hover:underline transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"

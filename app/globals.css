@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+/* Custom styles for required input placeholders with brand color asterisk */
+.placeholder-asterisk::placeholder {
+  color: #9CA3AF;
+}
+
+/* Style for the asterisk part in placeholder - using a more complex approach */
+.placeholder-asterisk {
+  position: relative;
+}
+
+.placeholder-asterisk::after {
+  content: "*";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #FF4000;
+  pointer-events: none;
+  font-size: 14px;
+}

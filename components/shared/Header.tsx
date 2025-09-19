@@ -50,23 +50,6 @@ const HeaderComponent = () => {
 
       <ShowWhen condition={!isAuthenticated}>
         <div className="flex items-center gap-4">
-          <button
-            onClick={openCart}
-            className="cursor-pointer hover:opacity-80 transition-opacity duration-200 relative"
-          >
-            <Image
-              src="/assets/header-shopping-cart.png"
-              alt="shopping cart"
-              width={24}
-              height={24}
-              className="w-6 h-6"
-            />
-            {cartItemsCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#FF4000] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                {cartItemsCount > 99 ? '99+' : cartItemsCount}
-              </span>
-            )}
-          </button>
           <Link
             href="/sign-in"
             className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity duration-200">

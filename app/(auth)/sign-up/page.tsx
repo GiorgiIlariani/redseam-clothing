@@ -46,7 +46,6 @@ const SignUpPage = () => {
         [field]: value,
       }));
 
-      // Clear error for current field
       if (errors[field]) {
         setErrors((prev) => ({
           ...prev,
@@ -54,7 +53,6 @@ const SignUpPage = () => {
         }));
       }
 
-      // Handle password confirmation cross-validation
       if (field === "password" && formData.confirmPassword && errors.confirmPassword) {
         if (value === formData.confirmPassword) {
           setErrors((prev) => ({
@@ -122,7 +120,6 @@ const SignUpPage = () => {
             <ImageUpload onImageChange={handleImageChange} />
             <Input
               variant="username"
-              label="Username"
               value={formData.username}
               onChange={handleInputChange("username")}
               error={errors.username}
@@ -130,7 +127,6 @@ const SignUpPage = () => {
             />
             <Input
               variant="email"
-              label="Email"
               value={formData.email}
               onChange={handleInputChange("email")}
               error={errors.email}
@@ -138,7 +134,6 @@ const SignUpPage = () => {
             />
             <Input
               variant="password"
-              label="Password"
               value={formData.password}
               onChange={handleInputChange("password")}
               error={errors.password}
@@ -146,7 +141,6 @@ const SignUpPage = () => {
             />
             <Input
               variant="confirmPassword"
-              label="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleInputChange("confirmPassword")}
               error={errors.confirmPassword}

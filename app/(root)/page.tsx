@@ -33,7 +33,6 @@ const HomePage = () => {
         },
       });
 
-      console.log("Products fetched:", result);
       setProducts(result);
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -52,12 +51,12 @@ const HomePage = () => {
 
   const handlePriceChange = (min: number | null, max: number | null) => {
     setPriceFilter({ min, max });
-    setCurrentPage(1); // Reset to first page when applying filters
+    setCurrentPage(1);
   };
 
   const handleSortChange = (sort: string) => {
     setSortBy(sort);
-    setCurrentPage(1); // Reset to first page when changing sort
+    setCurrentPage(1);
   };
 
   return (
@@ -76,7 +75,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Active Filters */}
       <div className="flex items-center gap-3">
         {(priceFilter.min !== null || priceFilter.max !== null) && (
           <div

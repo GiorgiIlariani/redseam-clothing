@@ -6,13 +6,13 @@ export const getInputPlaceholder = (variant: string, customPlaceholder?: string)
   
   switch (variant) {
     case "email":
-      return "Enter your email";
+      return "Email";
     case "password":
-      return "Enter your password";
+      return "Password";
     case "username":
-      return "Enter your username";
+      return "Username";
     case "confirmPassword":
-      return "Confirm your password";
+      return "Confirm Password";
     default:
       return "";
   }

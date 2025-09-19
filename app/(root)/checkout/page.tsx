@@ -43,7 +43,6 @@ const CheckoutPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.zipCode || !formData.address) {
       alert("Please fill in all fields");
       return;
@@ -52,17 +51,13 @@ const CheckoutPage = () => {
     setIsSubmitting(true);
     
     try {
-      // Call the real checkout API
       const result = await cartAPI.checkout();
       console.log("Checkout successful:", result);
       
-      // Refresh cart to get updated state (should be empty after checkout)
       await fetchCart();
       
-      // Show success modal
       setShowSuccessModal(true);
       
-      // Reset form
       setFormData({
         firstName: "",
         lastName: "",
@@ -93,14 +88,14 @@ const CheckoutPage = () => {
 
             <div className="flex flex-col gap-[33px] mt-[46px]">
               <div className="flex gap-6">
-                <Input
-                  type="text"
-                  placeholder="First Name"
-                  value={formData.firstName}
-                  onChange={handleInputChange("firstName")}
-                  className="w-[277px]"
-                  required
-                />
+              <Input
+                type="text"
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleInputChange("firstName")}
+                className="w-[277px]"
+                required
+              />
                 <Input
                   type="text"
                   placeholder="Last Name"
@@ -114,7 +109,7 @@ const CheckoutPage = () => {
               <div className="w-full">
                 <Input
                   type="email"
-                  placeholder="Email Address"
+                  placeholder="Email"
                   value={formData.email}
                   onChange={handleInputChange("email")}
                   className="w-[578px]"
@@ -146,7 +141,6 @@ const CheckoutPage = () => {
         <div className="w-[400px]">
           {cartItems.length > 0 && (
             <div className="bg-white rounded-lg p-6">
-              {/* Cart Items */}
               <div className="mb-6">
                 {cartItems.map((item) => (
                   <CartItem
@@ -156,7 +150,6 @@ const CheckoutPage = () => {
                 ))}
               </div>
 
-              {/* Pricing Summary */}
               <div className="border-t border-gray-200 pt-4">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -201,7 +194,6 @@ const CheckoutPage = () => {
         </div>
       </form>
 
-      {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">

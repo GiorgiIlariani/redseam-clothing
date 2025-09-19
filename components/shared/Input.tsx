@@ -5,10 +5,11 @@ import { InputProps } from "@/types/components";
 import { getInputPlaceholder, getInputType, isPasswordField } from "@/utils/inputHelpers";
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, variant = "default", className = "", ...props }, ref) => {
+  ({ error, variant = "default", className = "", label, required, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
 
-    const placeholder = getInputPlaceholder(variant, props.placeholder);
+    const basePlaceholder = getInputPlaceholder(variant, props.placeholder);
+    const placeholder = required ? `${basePlaceholder} *` : basePlaceholder;
     const inputType = getInputType(variant, showPassword, props.type);
     const isPassword = isPasswordField(variant);
 
@@ -18,10 +19,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="flex flex-col gap-1">
-        {label && (
-          <label className="text-[#10151F] text-sm font-medium">{label}</label>
-        )}
-
         <div className="relative">
           <input
             ref={ref}
@@ -48,6 +45,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               focus:outline-none 
               transition-all 
               duration-200
+              ${required ? 'placeholder-asterisk' : ''}
               ${className || 'w-[554px]'}
             `}
             style={{

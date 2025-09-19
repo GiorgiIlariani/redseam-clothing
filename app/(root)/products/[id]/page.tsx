@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { productsAPI } from "@/lib/productsApi";
 import { ProductDetail } from "@/types/products";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ProductPage = () => {
   const params = useParams();
+  const router = useRouter();
   const productId = params.id as string;
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,7 @@ const ProductPage = () => {
     useState<boolean>(false);
   const quantityDropdownRef = useRef<HTMLDivElement>(null);
   const { openCart, addToCart, isLoading, error } = useCart();
+  const { isAuthenticated } = useAuth();
 
   // Create color-image mapping (each color corresponds to an image by index)
   const getImageForColor = (color: string): string => {
@@ -49,17 +52,16 @@ const ProductPage = () => {
       try {
         setLoading(true);
         const result = await productsAPI.getProductById(Number(productId));
-        console.log("Product data:", result);
         setProduct(result);
-        // Set the first image as selected by default
+        
         if (result.images && result.images.length > 0) {
           setSelectedImage(result.images[0]);
         }
-        // Set the first color as selected by default
+        
         if (result.available_colors && result.available_colors.length > 0) {
           setSelectedColor(result.available_colors[0]);
         }
-        // Set the first size as selected by default
+        
         if (result.available_sizes && result.available_sizes.length > 0) {
           setSelectedSize(result.available_sizes[0]);
         }
@@ -120,7 +122,11 @@ const ProductPage = () => {
   const handleAddToCart = async () => {
     if (!product) return;
 
-    // Validate selections
+    if (!isAuthenticated) {
+      router.push('/sign-in');
+      return;
+    }
+
     if (!selectedColor && product.available_colors && product.available_colors.length > 0) {
       alert('Please select a color');
       return;
@@ -132,12 +138,11 @@ const ProductPage = () => {
     }
 
     try {
-      // Use selected values or defaults
       const color = selectedColor || product.available_colors?.[0] || 'Default';
       const size = selectedSize || product.available_sizes?.[0] || 'One Size';
       
       await addToCart(product.id, color, size, quantity);
-      openCart(); // Open cart to show the added item
+      openCart();
     } catch (error) {
       console.error('Error adding to cart:', error);
     }
@@ -156,7 +161,6 @@ const ProductPage = () => {
 
       <div className="mt-[49px] flex gap-[168px]">
         <div className="flex gap-6">
-          {/* Thumbnail Images */}
           <div className="flex flex-col gap-[9px]">
             {product?.images?.map((image, index) => (
               <div
@@ -177,7 +181,6 @@ const ProductPage = () => {
             ))}
           </div>
 
-          {/* Main Image */}
           <div className="w-[703px] h-[937px] relative bg-gray-100 rounded-lg overflow-hidden">
             {selectedImage && (
               <Image
@@ -192,7 +195,6 @@ const ProductPage = () => {
         </div>
 
         <div className="flex flex-1 flex-col gap-14">
-          {/* 1 */}
           <div className="flex flex-col gap-[21px]">
             <h1 className="text-[32px] font-semibold text-[#10151F]">
               {product.name}
@@ -201,7 +203,7 @@ const ProductPage = () => {
               ${product.price}
             </h2>
           </div>
-          {/* 2 */}
+          
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-4">
               <span className="text-[#3E424A] font-normal text-base">
@@ -305,14 +307,13 @@ const ProductPage = () => {
               </div>
             </div>
           </div>
-          {/* Error Display */}
+          
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
               <p className="text-red-700 text-sm">{error}</p>
             </div>
           )}
 
-          {/* Add to Cart Button */}
           <button 
             onClick={handleAddToCart}
             disabled={isLoading}
@@ -336,10 +337,9 @@ const ProductPage = () => {
               </>
             )}
           </button>
-          {/* 4 */}
+          
           <div className="w-full my-14 border border-[#E1DFE1]" />
 
-          {/* 5 */}
           <div className="flex flex-col gap-[7px]">
             <div className="w-full flex justify-between items-center">
               <h4 className="text-[#10151F] font-medium text-xl">Details</h4>
