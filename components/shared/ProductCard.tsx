@@ -1,0 +1,33 @@
+import Image from "next/image";
+import React from "react";
+import Link from "next/link";
+import { Product } from "@/types/products";
+
+interface ProductCardProps {
+  product: Product;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  return (
+    <Link href={`/products/${product.id}`} className="flex flex-col gap-3 cursor-pointer hover:opacity-90 transition-opacity">
+      <div className="h-[412px] relative bg-gray-100 rounded-lg overflow-hidden">
+        <Image
+          src={product.cover_image}
+          alt={product.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="flex flex-col gap-[2px]">
+        <p className="text-[#10151F] text-lg font-medium">
+          {product.name}
+        </p>
+        <span className="text-[#10151F] text-base font-medium">
+          $ {product.price}
+        </span>
+      </div>
+    </Link>
+  );
+};
+
+export default ProductCard;

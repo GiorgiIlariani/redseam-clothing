@@ -1,0 +1,146 @@
+"use client";
+
+import { useCart } from "@/contexts/CartContext";
+import Image from "next/image";
+import CartItem from "./CartItem";
+import { formatPrice } from "@/utils/cartUtils";
+import { useRouter } from "next/navigation";
+
+const ShoppingCart = () => {
+  const {
+    isCartOpen,
+    closeCart,
+    cartItems,
+    cartTotal,
+    cartItemsCount,
+    isLoading,
+    error,
+  } = useCart();
+  const router = useRouter();
+
+  const handleGoToCheckout = () => {
+    closeCart();
+    router.push('/checkout');
+  };
+
+  return (
+    <>
+      {/* Cart Sidebar */}
+      <div
+        className={`fixed top-0 right-0 pt-[41px] px-10 pb-10 h-full bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+          isCartOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        style={{
+          width: "540px",
+          height: "1080px",
+          borderLeftWidth: "1px",
+          borderLeftColor: "#E5E7EB",
+        }}>
+        {/* Cart Header */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-[#10151F]">
+            Shopping Cart ({cartItemsCount})
+          </h2>
+          <button
+            onClick={closeCart}
+            className="hover:opacity-70 transition-opacity">
+            <Image
+              src="/assets/x-mark.png"
+              alt="Close cart"
+              width={24}
+              height={24}
+            />
+          </button>
+        </div>
+
+        {/* Cart Content */}
+        <div className="flex-1 overflow-y-auto mt-[63px]">
+          {/* Error State */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+              <p className="text-red-700 text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {isLoading && cartItems.length === 0 ? (
+            <div className="flex justify-center items-center pt-[151px]">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4000]"></div>
+            </div>
+          ) : cartItems.length === 0 ? (
+            /* Empty Cart State */
+            <div className="flex flex-col justify-center items-center pt-[151px]">
+              <Image
+                src="/assets/no-cart-item.png"
+                alt="no-cart"
+                width={170}
+                height={135}
+              />
+              <strong className="text-2xl font-semibold text-[#10151F] mt-6">
+                Ooops!
+              </strong>
+              <p className="text-[#3E424A] text-sm font-normal mt-[10px]">
+                You've got nothing in your cart just yet...
+              </p>
+
+              <button
+                onClick={closeCart}
+                className="w-[214px] text-white mt-[58px] flex items-center justify-center gap-2 bg-[#FF4000] py-[10px] rounded-[10px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E63600] transition-colors duration-200">
+                Start shopping
+              </button>
+            </div>
+          ) : (
+            /* Cart Items */
+            <div className="flex flex-col">
+              {cartItems.map((item) => (
+                <CartItem key={item.id} item={item} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Cart Footer - Show only when there are items */}
+        {cartItems.length > 0 && (
+          <div className="border-t border-gray-200 pt-6 mt-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-base font-normal text-[#3E424A]">
+                  Items subtotal:
+                </span>
+                <span className="text-base font-normal text-[#3E424A]">
+                  {formatPrice(cartTotal)}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-base font-normal text-[#3E424A]">
+                  Delivery:
+                </span>
+                <span className="text-base font-normal text-[#3E424A]">
+                  {formatPrice(5)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xl font-medium text-[#10151F]">
+                  Total:
+                </span>
+                <span className="text-xl font-medium text-[#10151F]">
+                  {formatPrice(cartTotal + 5)}
+                </span>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleGoToCheckout}
+              className="w-full cursor-pointer bg-[#FF4000] text-white py-3 rounded-lg font-medium hover:bg-[#E63600] transition-colors duration-200 mt-[102px]"
+            >
+              Go to checkout
+            </button>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default ShoppingCart;
