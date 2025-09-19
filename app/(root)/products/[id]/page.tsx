@@ -136,16 +136,16 @@ const ProductPage = () => {
     return <div className="mt-[30px] px-[100px]">Product not found</div>;
   }
   return (
-    <main className="mt-[30px] px-[100px] pb-[110px]">
+    <main className="mt-4 sm:mt-[30px] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px] pb-8 sm:pb-[110px]">
       <h4 className="text-sm font-normal text-[#10151F]">Listing / Product</h4>
 
-      <div className="mt-[49px] flex gap-[168px]">
-        <div className="flex gap-6">
-          <div className="flex flex-col gap-[9px]">
+      <div className="mt-8 sm:mt-[49px] flex flex-col lg:flex-row gap-8 lg:gap-[168px]">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+          <div className="flex sm:flex-col gap-2 sm:gap-[9px] overflow-x-auto sm:overflow-x-visible">
             {product?.images?.map((image, index) => (
               <div
                 key={index}
-                className={`w-[100px] h-[100px] relative rounded-lg overflow-hidden cursor-pointer border-2 ${
+                className={`w-16 h-16 sm:w-[100px] sm:h-[100px] relative rounded-lg overflow-hidden cursor-pointer border-2 flex-shrink-0 ${
                   selectedImage === image
                     ? "border-[#FF4000]"
                     : "border-gray-200"
@@ -161,25 +161,24 @@ const ProductPage = () => {
             ))}
           </div>
 
-          <div className="w-[703px] h-[937px] relative bg-gray-100 rounded-lg overflow-hidden">
+          <div className="w-full sm:w-[400px] md:w-[500px] lg:w-[703px] aspect-[3/4] lg:h-[937px] lg:aspect-auto relative bg-gray-100 rounded-lg overflow-hidden">
             {selectedImage && (
               <Image
                 src={selectedImage}
                 alt={product?.name || "Product image"}
-                width={703}
-                height={937}
-                className="w-[703px] h-[937px] object-cover"
+                fill
+                className="object-cover"
               />
             )}
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col gap-14">
-          <div className="flex flex-col gap-[21px]">
-            <h1 className="text-[32px] font-semibold text-[#10151F]">
+        <div className="flex flex-1 flex-col gap-8 lg:gap-14">
+          <div className="flex flex-col gap-4 lg:gap-[21px]">
+            <h1 className="text-xl sm:text-2xl lg:text-[32px] font-semibold text-[#10151F]">
               {product.name}
             </h1>
-            <h2 className="text-[32px] font-semibold text-[#10151F]">
+            <h2 className="text-xl sm:text-2xl lg:text-[32px] font-semibold text-[#10151F]">
               ${product.price}
             </h2>
           </div>

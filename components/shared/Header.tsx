@@ -20,7 +20,7 @@ const HeaderComponent = () => {
   };
 
   return (
-    <header className="flex items-center justify-between px-[100px] h-20">
+    <header className="flex items-center justify-between px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px] h-16 sm:h-20">
       <Link className="flex items-center gap-1" href="/">
         <Image
           src="/assets/handEye.png"
@@ -30,7 +30,7 @@ const HeaderComponent = () => {
           className="w-6 h-6"
         />
 
-        <h3 className="text-[#10151F] text-base font-semibold">
+        <h3 className="text-[#10151F] text-sm sm:text-base font-semibold hidden xs:block">
           RedSeam Clothing
         </h3>
       </Link>

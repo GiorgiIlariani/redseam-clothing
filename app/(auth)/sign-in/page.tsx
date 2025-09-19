@@ -63,9 +63,9 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="max-w-[554px] mx-auto flex flex-col gap-12">
-        <h1 className="text-[#10151F] font-semibold text-[42px]">Log In</h1>
+    <div className="w-full h-full min-h-screen flex items-center justify-center p-4 sm:p-8">
+      <div className="w-full max-w-[554px] flex flex-col gap-8 sm:gap-12">
+        <h1 className="text-[#10151F] font-semibold text-2xl sm:text-3xl lg:text-[42px] text-center lg:text-left">Log In</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-[46px]">
           {generalError && (

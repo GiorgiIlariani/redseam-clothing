@@ -10,6 +10,20 @@
   }
 }
 
+@layer utilities {
+  .xs\:block {
+    @media (min-width: 475px) {
+      display: block;
+    }
+  }
+  
+  .xs\:hidden {
+    @media (min-width: 475px) {
+      display: none;
+    }
+  }
+}
+
 /* Required field asterisk styling */
 .placeholder-asterisk::after {
   content: "*";

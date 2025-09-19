@@ -107,25 +107,25 @@ const CheckoutPage = () => {
   };
 
   return (
-    <main className="mt-[72px] px-[100px]">
-      <h1 className="text-[42px] text-[#10151F] font-semibold">Checkout</h1>
+    <main className="mt-16 sm:mt-[72px] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px]">
+      <h1 className="text-2xl sm:text-3xl lg:text-[42px] text-[#10151F] font-semibold">Checkout</h1>
 
       <form onSubmit={handleSubmit}>
-        <div className="mt-[42px] items-start flex gap-[131px]">
-          <div className="flex-1 bg-[#F8F6F7] rounded-2xl pl-[47px] pt-[72px] pr-[47px] pb-[72px]">
-            <h3 className="text-[22px] text-[#10151F] font-medium">
+        <div className="mt-8 sm:mt-[42px] flex flex-col lg:flex-row gap-8 lg:gap-[131px]">
+          <div className="flex-1 bg-[#F8F6F7] rounded-2xl p-6 sm:p-8 lg:pl-[47px] lg:pt-[72px] lg:pr-[47px] lg:pb-[72px]">
+            <h3 className="text-lg sm:text-xl lg:text-[22px] text-[#10151F] font-medium">
               Order details
             </h3>
 
-            <div className="flex flex-col gap-[33px] mt-[46px]">
-              <div className="flex gap-6">
+            <div className="flex flex-col gap-6 sm:gap-[33px] mt-8 sm:mt-[46px]">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                 <Input
                   type="text"
                   placeholder="Name"
                   value={formData.firstName}
                   onChange={handleInputChange("firstName")}
                   error={errors.firstName}
-                  className="w-[277px]"
+                  className="w-full sm:w-[277px]"
                   required
                 />
                 <Input
@@ -134,7 +134,7 @@ const CheckoutPage = () => {
                   value={formData.lastName}
                   onChange={handleInputChange("lastName")}
                   error={errors.lastName}
-                  className="w-[277px]"
+                  className="w-full sm:w-[277px]"
                   required
                 />
               </div>
@@ -146,19 +146,19 @@ const CheckoutPage = () => {
                   value={formData.email}
                   onChange={handleInputChange("email")}
                   error={errors.email}
-                  className="w-[578px]"
+                  className="w-full sm:w-[578px]"
                   required
                 />
               </div>
 
-              <div className="flex gap-6">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                 <Input
                   type="text"
                   placeholder="Zip Code"
                   value={formData.zipCode}
                   onChange={handleInputChange("zipCode")}
                   error={errors.zipCode}
-                  className="w-[277px]"
+                  className="w-full sm:w-[277px]"
                   required
                 />
                 <Input
@@ -167,16 +167,16 @@ const CheckoutPage = () => {
                   value={formData.address}
                   onChange={handleInputChange("address")}
                   error={errors.address}
-                  className="w-[277px]"
+                  className="w-full sm:w-[277px]"
                   required
                 />
               </div>
             </div>
           </div>
 
-          <div className="w-[460px]">
+          <div className="w-full lg:w-[460px]">
             {cartItems.length > 0 && (
-              <div className="bg-white flex flex-col gap-[81px] rounded-lg h-fit max-h-[800px]">
+              <div className="bg-white flex flex-col gap-12 lg:gap-[81px] rounded-lg p-4 sm:p-6 h-fit max-h-[800px]">
                 <div className="overflow-y-auto max-h-[400px] pr-2">
                   {cartItems.map((item) => (
                     <CartItem

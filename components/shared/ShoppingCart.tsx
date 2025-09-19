@@ -34,12 +34,12 @@ const ShoppingCart = () => {
           isCartOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
-          width: CART_SIDEBAR_WIDTH,
+          width: "min(540px, 100vw)",
           borderLeftWidth: "1px",
           borderLeftColor: "#E5E7EB",
         }}>
-        <div className="flex items-center justify-between pt-[41px] px-10 pb-6 flex-shrink-0">
-          <h2 className="text-xl font-semibold text-[#10151F]">
+        <div className="flex items-center justify-between pt-6 sm:pt-[41px] px-4 sm:px-10 pb-6 flex-shrink-0">
+          <h2 className="text-lg sm:text-xl font-semibold text-[#10151F]">
             Shopping Cart ({cartItemsCount})
           </h2>
           <button
@@ -54,7 +54,7 @@ const ShoppingCart = () => {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-10 min-h-0">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-10 min-h-0">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
               <p className="text-red-700 text-sm">{error}</p>
@@ -96,7 +96,7 @@ const ShoppingCart = () => {
         </div>
 
         {cartItems.length > 0 && (
-          <div className="pt-6 px-10 pb-10 flex-shrink-0">
+          <div className="pt-6 px-4 sm:px-10 pb-10 flex-shrink-0">
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-base font-normal text-[#3E424A]">
