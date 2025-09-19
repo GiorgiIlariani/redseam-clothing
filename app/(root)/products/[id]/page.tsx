@@ -7,6 +7,8 @@ import { productsAPI } from "@/lib/productsApi";
 import { ProductDetail } from "@/types/products";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOutsideClick } from "@/hooks/useOutsideClick";
+import ProductDetailSkeleton from "@/components/shared/ProductDetailSkeleton";
 
 const ProductPage = () => {
   const params = useParams();
@@ -24,10 +26,13 @@ const ProductPage = () => {
   const { openCart, addToCart, isLoading, error } = useCart();
   const { isAuthenticated } = useAuth();
 
+  // Close quantity dropdown when clicking outside
+  useOutsideClick(quantityDropdownRef, () => setShowQuantityDropdown(false));
+
   // Create color-image mapping (each color corresponds to an image by index)
   const getImageForColor = (color: string): string => {
     if (!product?.available_colors || !product?.images) return "";
-    
+
     const colorIndex = product.available_colors.indexOf(color);
     if (colorIndex >= 0 && colorIndex < product.images.length) {
       return product.images[colorIndex];
@@ -38,7 +43,7 @@ const ProductPage = () => {
 
   const getColorForImage = (image: string): string => {
     if (!product?.available_colors || !product?.images) return "";
-    
+
     const imageIndex = product.images.indexOf(image);
     if (imageIndex >= 0 && imageIndex < product.available_colors.length) {
       return product.available_colors[imageIndex];
@@ -53,15 +58,15 @@ const ProductPage = () => {
         setLoading(true);
         const result = await productsAPI.getProductById(Number(productId));
         setProduct(result);
-        
+
         if (result.images && result.images.length > 0) {
           setSelectedImage(result.images[0]);
         }
-        
+
         if (result.available_colors && result.available_colors.length > 0) {
           setSelectedColor(result.available_colors[0]);
         }
-        
+
         if (result.available_sizes && result.available_sizes.length > 0) {
           setSelectedSize(result.available_sizes[0]);
         }
@@ -123,33 +128,41 @@ const ProductPage = () => {
     if (!product) return;
 
     if (!isAuthenticated) {
-      router.push('/sign-in');
+      router.push("/sign-in");
       return;
     }
 
-    if (!selectedColor && product.available_colors && product.available_colors.length > 0) {
-      alert('Please select a color');
+    if (
+      !selectedColor &&
+      product.available_colors &&
+      product.available_colors.length > 0
+    ) {
+      alert("Please select a color");
       return;
     }
-    
-    if (!selectedSize && product.available_sizes && product.available_sizes.length > 0) {
-      alert('Please select a size');
+
+    if (
+      !selectedSize &&
+      product.available_sizes &&
+      product.available_sizes.length > 0
+    ) {
+      alert("Please select a size");
       return;
     }
 
     try {
-      const color = selectedColor || product.available_colors?.[0] || 'Default';
-      const size = selectedSize || product.available_sizes?.[0] || 'One Size';
-      
+      const color = selectedColor || product.available_colors?.[0] || "Default";
+      const size = selectedSize || product.available_sizes?.[0] || "One Size";
+
       await addToCart(product.id, color, size, quantity);
       openCart();
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error("Error adding to cart:", error);
     }
   };
 
   if (loading) {
-    return <div className="mt-[30px] px-[100px]">Loading...</div>;
+    return <ProductDetailSkeleton />;
   }
 
   if (!product) {
@@ -203,7 +216,7 @@ const ProductPage = () => {
               ${product.price}
             </h2>
           </div>
-          
+
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-4">
               <span className="text-[#3E424A] font-normal text-base">
@@ -272,7 +285,7 @@ const ProductPage = () => {
               <span className="text-[#3E424A] font-normal text-base">
                 Quantity:
               </span>
-              <div className="relative">
+              <div className="relative w-fit" ref={quantityDropdownRef}>
                 <button
                   onClick={() => setShowQuantityDropdown(!showQuantityDropdown)}
                   className="w-[70px] h-[42px] px-4 py-[9px] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between text-left">
@@ -289,7 +302,7 @@ const ProductPage = () => {
                 </button>
 
                 {showQuantityDropdown && (
-                  <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-[120px] max-h-[200px] overflow-y-auto">
+                  <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-[70px] max-h-[200px] overflow-y-auto">
                     {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
                       <button
                         key={num}
@@ -307,18 +320,17 @@ const ProductPage = () => {
               </div>
             </div>
           </div>
-          
+
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
               <p className="text-red-700 text-sm">{error}</p>
             </div>
           )}
 
-          <button 
+          <button
             onClick={handleAddToCart}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 bg-[#FF4000] py-[10px] rounded-[10px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E63600] transition-colors duration-200"
-          >
+            className="w-full flex items-center justify-center gap-2 bg-[#FF4000] py-[10px] rounded-[10px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E63600] transition-colors duration-200">
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
@@ -337,7 +349,7 @@ const ProductPage = () => {
               </>
             )}
           </button>
-          
+
           <div className="w-full my-14 border border-[#E1DFE1]" />
 
           <div className="flex flex-col gap-[7px]">

@@ -22,6 +22,7 @@ export interface CartContextType {
   uniqueItemsCount: number;
   cartTotal: number;
   isLoading: boolean;
+  isItemLoading: (productId: number) => boolean;
   error: string | null;
   openCart: () => void;
   closeCart: () => void;

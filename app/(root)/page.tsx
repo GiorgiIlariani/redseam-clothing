@@ -70,6 +70,7 @@ const HomePage = () => {
               {products.meta.total} results
             </span>
           )}
+          <div className="border border-[#E1DFE1] w-[1px] h-[14px] mx-4" />
           <SortBy onSortChange={handleSortChange} currentSort={sortBy} />
           <PriceFilter ref={priceFilterRef} onPriceChange={handlePriceChange} />
         </div>

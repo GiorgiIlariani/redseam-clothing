@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { useOutsideClick } from "@/hooks/useOutsideClick";
 
 interface SortByProps {
   onSortChange: (sort: string) => void;
@@ -24,19 +25,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
   };
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useOutsideClick(dropdownRef, () => setIsOpen(false));
 
   const handleSortSelect = (sortValue: string) => {
     onSortChange(sortValue);
@@ -48,7 +37,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
       {/* Sort Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-[223px] h-[40px] px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between text-left">
+        className="w-[80px] h-[40px] px-2 py-2 flex items-center justify-between text-left">
         <span className="text-gray-700 text-sm">{getCurrentSortLabel()}</span>
         <svg
           className={`w-4 h-4 transition-transform ${
@@ -71,7 +60,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
         <div
           className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
           style={{
-            width: "223px",
+            width: "200px",
             paddingTop: "16px",
             paddingBottom: "16px",
           }}>

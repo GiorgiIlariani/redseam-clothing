@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { getVisiblePages, isPageNumber } from "@/utils/pagination";
 
 interface PaginationProps {
@@ -15,9 +16,22 @@ const Pagination: React.FC<PaginationProps> = ({
   const visiblePages = getVisiblePages({ currentPage, totalPages });
 
   return (
-    <div
-      className="flex items-center justify-center gap-2"
-      style={{ width: "248px", height: "32px" }}>
+    <div className="flex items-center justify-center gap-2">
+      <button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage <= 1}
+        className="w-8 h-8 rounded flex items-center justify-center cursor-pointer transition-colors duration-200 hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent">
+        <Image
+          src="/assets/chevron-down.png"
+          alt="Previous"
+          width={16}
+          height={16}
+          className={`w-4 h-4 rotate-90 ${
+            currentPage <= 1 ? "opacity-30" : "opacity-70"
+          }`}
+        />
+      </button>
+
       {visiblePages.map((page, index) => (
         <button
           key={index}
@@ -28,15 +42,29 @@ const Pagination: React.FC<PaginationProps> = ({
             transition-colors duration-200
             ${
               page === currentPage
-                ? "bg-[#FF4000] text-white"
+                ? "border border-[#FF4000] text-[#FF4000]"
                 : !isPageNumber(page)
                 ? "text-gray-500 cursor-default"
-                : "text-[#10151F] hover:bg-gray-100"
+                : "text-[#212B36] border border-[#F8F6F7]"
             }
           `}>
           {page}
         </button>
       ))}
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage >= totalPages}
+        className="w-8 h-8 rounded flex items-center justify-center cursor-pointer transition-colors duration-200 hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent">
+        <Image
+          src="/assets/chevron-down.png"
+          alt="Next"
+          width={16}
+          height={16}
+          className={`w-4 h-4 -rotate-90 ${
+            currentPage >= totalPages ? "opacity-30" : "opacity-70"
+          }`}
+        />
+      </button>
     </div>
   );
 };

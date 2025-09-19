@@ -17,6 +17,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingItems, setLoadingItems] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const { isAuthenticated } = useAuth();
 
@@ -78,7 +79,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isAuthenticated) return;
 
     try {
-      setIsLoading(true);
+      setLoadingItems(prev => new Set(prev).add(productId));
       setError(null);
       if (quantity <= 0) {
         await removeFromCart(productId);
@@ -92,7 +93,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setError(errorMessage);
       console.error('Error updating cart quantity:', err);
     } finally {
-      setIsLoading(false);
+      setLoadingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
     }
   };
 
@@ -101,7 +106,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isAuthenticated) return;
 
     try {
-      setIsLoading(true);
+      setLoadingItems(prev => new Set(prev).add(productId));
       setError(null);
       await cartAPI.removeFromCart(productId);
       // Refresh cart after removing
@@ -111,13 +116,20 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setError(errorMessage);
       console.error('Error removing from cart:', err);
     } finally {
-      setIsLoading(false);
+      setLoadingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
     }
   };
 
   const cartItemsCount = calculateCartItemsCount(cartItems);
   const uniqueItemsCount = calculateUniqueItemsCount(cartItems);
   const cartTotal = calculateCartTotal(cartItems);
+
+  // Helper function to check if specific item is loading
+  const isItemLoading = (productId: number) => loadingItems.has(productId);
 
   return (
     <CartContext.Provider value={{ 
@@ -127,6 +139,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       uniqueItemsCount,
       cartTotal,
       isLoading,
+      isItemLoading,
       error,
       openCart, 
       closeCart,

@@ -11,7 +11,8 @@ interface CartItemProps {
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
-  const { updateQuantity, removeFromCart, isLoading } = useCart();
+  const { updateQuantity, removeFromCart, isItemLoading } = useCart();
+  const itemIsLoading = isItemLoading(item.id);
 
   const handleQuantityChange = (newQuantity: number) => {
     updateQuantity(item.id, newQuantity);
@@ -23,7 +24,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
   return (
     <div className="flex gap-4 py-4">
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 border border-[#E1DFE1] rounded-[10px]">
         <Image
           src={item.cover_image}
           alt={item.name}
@@ -59,7 +60,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
             <button
               onClick={() => handleQuantityChange(item.quantity - 1)}
               className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={item.quantity <= 1 || isLoading}>
+              disabled={item.quantity <= 1 || itemIsLoading}>
               <span className="text-lg font-medium">−</span>
             </button>
 
@@ -70,16 +71,15 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
             <button
               onClick={() => handleQuantityChange(item.quantity + 1)}
               className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isLoading}>
+              disabled={itemIsLoading}>
               <span className="text-lg font-medium">+</span>
             </button>
           </div>
 
           <button
             onClick={handleRemove}
-            className="text-[#FF4000] text-sm font-normal hover:underline transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isLoading}>
-            {isLoading ? "Removing..." : "Remove"}
+            className="text-[#3E424A] cursor-pointer text-xs font-normal hover:underline transition-all duration-200">
+            Remove
           </button>
         </div>
       </div>

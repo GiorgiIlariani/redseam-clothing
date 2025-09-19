@@ -21,6 +21,14 @@ const CheckoutPage = () => {
     address: "",
   });
 
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    zipCode?: string;
+    address?: string;
+  }>({});
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,23 +48,34 @@ const CheckoutPage = () => {
         ...prev,
         [field]: e.target.value,
       }));
+
+      // Clear error for this field when user starts typing
+      if (errors[field as keyof typeof errors]) {
+        setErrors(prev => ({
+          ...prev,
+          [field]: undefined
+        }));
+      }
     };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.email ||
-      !formData.zipCode ||
-      !formData.address
-    ) {
-      alert("Please fill in all fields");
+    // Validate required fields
+    const newErrors: typeof errors = {};
+    if (!formData.firstName.trim()) newErrors.firstName = "Name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Surname is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    if (!formData.zipCode.trim()) newErrors.zipCode = "Zip Code is required";
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
     setIsSubmitting(true);
+    setErrors({}); // Clear any previous errors
 
     try {
       const result = await cartAPI.checkout({
@@ -109,6 +128,7 @@ const CheckoutPage = () => {
                   placeholder="Name"
                   value={formData.firstName}
                   onChange={handleInputChange("firstName")}
+                  error={errors.firstName}
                   className="w-[277px]"
                   required
                 />
@@ -117,6 +137,7 @@ const CheckoutPage = () => {
                   placeholder="Surname"
                   value={formData.lastName}
                   onChange={handleInputChange("lastName")}
+                  error={errors.lastName}
                   className="w-[277px]"
                   required
                 />
@@ -128,6 +149,7 @@ const CheckoutPage = () => {
                   placeholder="Email"
                   value={formData.email}
                   onChange={handleInputChange("email")}
+                  error={errors.email}
                   className="w-[578px]"
                   required
                 />
@@ -139,6 +161,7 @@ const CheckoutPage = () => {
                   placeholder="Zip Code"
                   value={formData.zipCode}
                   onChange={handleInputChange("zipCode")}
+                  error={errors.zipCode}
                   className="w-[277px]"
                   required
                 />
@@ -147,6 +170,7 @@ const CheckoutPage = () => {
                   placeholder="Address"
                   value={formData.address}
                   onChange={handleInputChange("address")}
+                  error={errors.address}
                   className="w-[277px]"
                   required
                 />

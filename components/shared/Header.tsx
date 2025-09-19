@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { ShowWhen } from "./ShowWhen";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { useOutsideClick } from "@/hooks/useOutsideClick";
 
 const HeaderComponent = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -14,18 +15,7 @@ const HeaderComponent = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
 
   const handleLogout = () => {
     logout();
@@ -69,8 +59,7 @@ const HeaderComponent = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={openCart}
-            className="cursor-pointer hover:opacity-80 transition-opacity duration-200 relative"
-          >
+            className="cursor-pointer hover:opacity-80 transition-opacity duration-200 relative">
             <Image
               src="/assets/header-shopping-cart.png"
               alt="shopping cart"
@@ -80,17 +69,16 @@ const HeaderComponent = () => {
             />
             {uniqueItemsCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-[#FF4000] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                {uniqueItemsCount > 99 ? '99+' : uniqueItemsCount}
+                {uniqueItemsCount > 99 ? "99+" : uniqueItemsCount}
               </span>
             )}
           </button>
-          
+
           {/* User Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity duration-200"
-            >
+              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity duration-200">
               <Image
                 src={
                   user?.avatar &&
@@ -100,8 +88,8 @@ const HeaderComponent = () => {
                     : "/assets/user.png"
                 }
                 alt="Profile"
-                width={32}
-                height={32}
+                width={40}
+                height={40}
                 className="w-8 h-8 rounded-full object-cover"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -114,7 +102,7 @@ const HeaderComponent = () => {
                 width={16}
                 height={16}
                 className={`w-4 h-4 transition-transform duration-200 ${
-                  isDropdownOpen ? 'rotate-180' : ''
+                  isDropdownOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
@@ -132,8 +120,7 @@ const HeaderComponent = () => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-[#10151F] hover:bg-gray-50 transition-colors duration-200"
-                >
+                  className="w-full text-left px-4 py-2 text-sm text-[#10151F] hover:bg-gray-50 transition-colors duration-200">
                   Logout
                 </button>
               </div>
