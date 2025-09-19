@@ -8,8 +8,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ error, variant = "default", className = "", label, required, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
 
-    const basePlaceholder = getInputPlaceholder(variant, props.placeholder);
-    const placeholder = required ? `${basePlaceholder} *` : basePlaceholder;
+    const placeholder = getInputPlaceholder(variant, props.placeholder);
     const inputType = getInputType(variant, showPassword, props.type);
     const isPassword = isPasswordField(variant);
 
@@ -45,7 +44,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               focus:outline-none 
               transition-all 
               duration-200
-              ${required ? 'placeholder-asterisk' : ''}
+              ${required ? `placeholder-asterisk ${isPassword ? 'has-password-toggle' : ''}` : ''}
               ${className || 'w-[554px]'}
             `}
             style={{

@@ -19,6 +19,7 @@ export interface CartContextType {
   isCartOpen: boolean;
   cartItems: CartItem[];
   cartItemsCount: number;
+  uniqueItemsCount: number;
   cartTotal: number;
   isLoading: boolean;
   error: string | null;

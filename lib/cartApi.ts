@@ -101,10 +101,17 @@ export const cartAPI = {
   },
 
   // POST /cart/checkout - Checkout cart
-  async checkout(): Promise<{ message: string }> {
+  async checkout(orderData?: {
+    name?: string;
+    surname?: string;
+    email?: string;
+    zip_code?: string;
+    address?: string;
+  }): Promise<{ message: string }> {
     const response = await fetch(`${API_BASE_URL}/cart/checkout`, {
       method: 'POST',
       headers: getAuthHeaders(),
+      ...(orderData && { body: JSON.stringify(orderData) }),
     });
 
     if (!response.ok) {
@@ -114,6 +121,11 @@ export const cartAPI = {
       if (response.status === 400) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Bad request');
+      }
+      if (response.status === 422) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('422 Validation Error Details:', errorData);
+        throw new Error(errorData.message || 'Validation error - check console for details');
       }
       throw new Error(`Checkout failed: ${response.status}`);
     }

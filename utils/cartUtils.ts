@@ -5,9 +5,14 @@ export const calculateCartTotal = (items: CartItem[]): number => {
   return items.reduce((total, item) => total + item.total_price, 0);
 };
 
-// Calculate total items count
+// Calculate total items count (sum of all quantities)
 export const calculateCartItemsCount = (items: CartItem[]): number => {
   return items.reduce((count, item) => count + item.quantity, 0);
+};
+
+// Calculate unique items count (number of different products)
+export const calculateUniqueItemsCount = (items: CartItem[]): number => {
+  return items.length;
 };
 
 // Find cart item by product ID

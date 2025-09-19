@@ -5,7 +5,8 @@ import { CartItem, CartContextType } from '@/types/cart';
 import { cartAPI } from '@/lib/cartApi';
 import { 
   calculateCartTotal, 
-  calculateCartItemsCount, 
+  calculateCartItemsCount,
+  calculateUniqueItemsCount,
   handleCartApiError
 } from '@/utils/cartUtils';
 import { useAuth } from './AuthContext';
@@ -115,6 +116,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const cartItemsCount = calculateCartItemsCount(cartItems);
+  const uniqueItemsCount = calculateUniqueItemsCount(cartItems);
   const cartTotal = calculateCartTotal(cartItems);
 
   return (
@@ -122,6 +124,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       isCartOpen, 
       cartItems,
       cartItemsCount,
+      uniqueItemsCount,
       cartTotal,
       isLoading,
       error,

@@ -7,17 +7,18 @@ import { formatPrice } from "@/utils/cartUtils";
 import CartItem from "@/components/shared/CartItem";
 import Input from "@/components/shared/Input";
 import { cartAPI } from "@/lib/cartApi";
+import SuccessModal from "@/components/shared/SuccessModal";
 
 const CheckoutPage = () => {
   const { cartItems, cartTotal, fetchCart } = useCart();
   const { user } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     zipCode: "",
-    address: ""
+    address: "",
   });
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -26,49 +27,64 @@ const CheckoutPage = () => {
   // Pre-populate email from user data
   useEffect(() => {
     if (user?.email) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        email: user.email
+        email: user.email,
       }));
     }
   }, [user]);
 
-  const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-  };
+  const handleInputChange =
+    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: e.target.value,
+      }));
+    };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.zipCode || !formData.address) {
+
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.zipCode ||
+      !formData.address
+    ) {
       alert("Please fill in all fields");
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      const result = await cartAPI.checkout();
+      const result = await cartAPI.checkout({
+        name: formData.firstName,
+        surname: formData.lastName,
+        email: formData.email,
+        zip_code: formData.zipCode,
+        address: formData.address
+      });
       console.log("Checkout successful:", result);
-      
+
       await fetchCart();
-      
+
       setShowSuccessModal(true);
-      
+
       setFormData({
         firstName: "",
         lastName: "",
         email: user?.email || "",
         zipCode: "",
-        address: ""
+        address: "",
       });
-      
     } catch (error) {
       console.error("Order submission failed:", error);
-      const errorMessage = error instanceof Error ? error.message : "Order submission failed. Please try again.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Order submission failed. Please try again.";
       alert(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -88,17 +104,17 @@ const CheckoutPage = () => {
 
             <div className="flex flex-col gap-[33px] mt-[46px]">
               <div className="flex gap-6">
-              <Input
-                type="text"
-                placeholder="First Name"
-                value={formData.firstName}
-                onChange={handleInputChange("firstName")}
-                className="w-[277px]"
-                required
-              />
                 <Input
                   type="text"
-                  placeholder="Last Name"
+                  placeholder="Name"
+                  value={formData.firstName}
+                  onChange={handleInputChange("firstName")}
+                  className="w-[277px]"
+                  required
+                />
+                <Input
+                  type="text"
+                  placeholder="Surname"
                   value={formData.lastName}
                   onChange={handleInputChange("lastName")}
                   className="w-[277px]"
@@ -116,7 +132,7 @@ const CheckoutPage = () => {
                   required
                 />
               </div>
-              
+
               <div className="flex gap-6">
                 <Input
                   type="text"
@@ -138,87 +154,65 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-        <div className="w-[400px]">
-          {cartItems.length > 0 && (
-            <div className="bg-white rounded-lg p-6">
-              <div className="mb-6">
-                {cartItems.map((item) => (
-                  <CartItem
-                    key={`${item.id}-${item.color}-${item.size}`}
-                    item={item}
-                  />
-                ))}
-              </div>
-
-              <div className="border-t border-gray-200 pt-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-normal text-[#3E424A]">
-                      Items subtotal:
-                    </span>
-                    <span className="text-base font-normal text-[#3E424A]">
-                      {formatPrice(cartTotal)}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-normal text-[#3E424A]">
-                      Delivery:
-                    </span>
-                    <span className="text-base font-normal text-[#3E424A]">
-                      {formatPrice(5)}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-                    <span className="text-xl font-medium text-[#10151F]">
-                      Total:
-                    </span>
-                    <span className="text-xl font-medium text-[#10151F]">
-                      {formatPrice(cartTotal + 5)}
-                    </span>
-                  </div>
+          <div className="w-[400px]">
+            {cartItems.length > 0 && (
+              <div className="bg-white rounded-lg p-6">
+                <div className="mb-6">
+                  {cartItems.map((item) => (
+                    <CartItem
+                      key={`${item.id}-${item.color}-${item.size}`}
+                      item={item}
+                    />
+                  ))}
                 </div>
 
-                <button 
-                  type="submit"
-                  disabled={isSubmitting || cartItems.length === 0}
-                  className="w-full bg-[#FF4000] text-white py-3 rounded-lg font-medium hover:bg-[#E63600] transition-colors duration-200 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? "Processing..." : "Pay Now"}
-                </button>
+                <div className="border-t border-gray-200 pt-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3E424A]">
+                        Items subtotal:
+                      </span>
+                      <span className="text-base font-normal text-[#3E424A]">
+                        {formatPrice(cartTotal)}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3E424A]">
+                        Delivery:
+                      </span>
+                      <span className="text-base font-normal text-[#3E424A]">
+                        {formatPrice(5)}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-200">
+                      <span className="text-xl font-medium text-[#10151F]">
+                        Total:
+                      </span>
+                      <span className="text-xl font-medium text-[#10151F]">
+                        {formatPrice(cartTotal + 5)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || cartItems.length === 0}
+                    className="w-full bg-[#FF4000] text-white py-3 rounded-lg font-medium hover:bg-[#E63600] transition-colors duration-200 mt-6 disabled:opacity-50 disabled:cursor-not-allowed">
+                    {isSubmitting ? "Processing..." : "Pay"}
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
         </div>
       </form>
 
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-[#10151F] mb-2">
-                Order Confirmed!
-              </h3>
-              <p className="text-[#3E424A] mb-6">
-                Thank you for your purchase. Your order has been successfully placed and will be processed shortly.
-              </p>
-              <button
-                onClick={() => setShowSuccessModal(false)}
-                className="w-full bg-[#FF4000] text-white py-3 rounded-lg font-medium hover:bg-[#E63600] transition-colors duration-200"
-              >
-                Continue Shopping
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+      />
     </main>
   );
 };

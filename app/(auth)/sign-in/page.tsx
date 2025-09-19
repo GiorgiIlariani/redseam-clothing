@@ -20,6 +20,7 @@ const SignInPage = () => {
   });
   
   const [errors, setErrors] = useState<FormErrors>({});
+  const [generalError, setGeneralError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = (): boolean => {
@@ -49,8 +50,11 @@ const SignInPage = () => {
       router.push('/');
     } catch (error) {
       console.error("Login error:", error);
-      const errorObj = setFormErrorFromApiError(error);
-      setErrors(errorObj);
+      if (error instanceof Error) {
+        setGeneralError(error.message);
+      } else {
+        setGeneralError('Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -62,6 +66,12 @@ const SignInPage = () => {
         <h1 className="text-[#10151F] font-semibold text-[42px]">Log In</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-[46px]">
+          {generalError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-red-700 text-sm text-center">{generalError}</p>
+            </div>
+          )}
+          
           <div className="flex flex-col gap-4">
             <Input 
               variant="email"

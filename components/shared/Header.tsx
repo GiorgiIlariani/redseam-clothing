@@ -9,7 +9,7 @@ import { useCart } from "@/contexts/CartContext";
 
 const HeaderComponent = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  const { openCart, cartItemsCount } = useCart();
+  const { openCart, uniqueItemsCount } = useCart();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -78,9 +78,9 @@ const HeaderComponent = () => {
               height={24}
               className="w-6 h-6"
             />
-            {cartItemsCount > 0 && (
+            {uniqueItemsCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-[#FF4000] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                {cartItemsCount > 99 ? '99+' : cartItemsCount}
+                {uniqueItemsCount > 99 ? '99+' : uniqueItemsCount}
               </span>
             )}
           </button>
