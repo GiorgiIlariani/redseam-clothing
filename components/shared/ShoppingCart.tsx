@@ -12,7 +12,7 @@ const ShoppingCart = () => {
     closeCart,
     cartItems,
     cartTotal,
-    cartItemsCount,
+    uniqueItemsCount,
     isLoading,
     error,
   } = useCart();
@@ -40,7 +40,7 @@ const ShoppingCart = () => {
         }}>
         <div className="flex items-center justify-between pt-6 sm:pt-[41px] px-4 sm:px-10 pb-6 flex-shrink-0">
           <h2 className="text-lg sm:text-xl font-semibold text-[#10151F]">
-            Shopping Cart ({cartItemsCount})
+            Shopping Cart ({uniqueItemsCount})
           </h2>
           <button
             onClick={closeCart}

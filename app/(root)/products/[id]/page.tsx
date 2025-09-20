@@ -19,6 +19,8 @@ const ProductPage = () => {
   const productId = params.id as string;
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mainImageLoaded, setMainImageLoaded] = useState(false);
+  const [thumbnailsLoaded, setThumbnailsLoaded] = useState<Set<string>>(new Set());
   const { openCart, addToCart, isLoading, error } = useCart();
   const { isAuthenticated } = useAuth();
 
@@ -47,6 +49,8 @@ const ProductPage = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        setMainImageLoaded(false);
+        setThumbnailsLoaded(new Set());
         const result = await productsAPI.getProductById(Number(productId));
         setProduct(result);
 
@@ -78,6 +82,14 @@ const ProductPage = () => {
     closeQuantityDropdown();
   };
 
+  const handleThumbnailLoad = (imageUrl: string) => {
+    setThumbnailsLoaded(prev => new Set(prev).add(imageUrl));
+  };
+
+  const handleMainImageLoad = () => {
+    setMainImageLoaded(true);
+  };
+
   const handleProductColorChange = (color: string) => {
     if (product?.available_colors && product?.images) {
       handleColorChange(color, product.available_colors, product.images);
@@ -86,6 +98,7 @@ const ProductPage = () => {
 
   const handleProductImageChange = (image: string) => {
     if (product?.available_colors && product?.images) {
+      setMainImageLoaded(false); // Reset loading state for new image
       handleImageChange(image, product.available_colors, product.images);
     }
   };
@@ -141,33 +154,68 @@ const ProductPage = () => {
       <div className="mt-8 sm:mt-[49px] flex flex-col lg:flex-row gap-8 lg:gap-[168px]">
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
           <div className="flex sm:flex-col gap-2 sm:gap-[9px] overflow-x-auto sm:overflow-x-visible">
-            {product?.images?.map((image, index) => (
-              <div
-                key={index}
-                className={`w-16 h-16 sm:w-[100px] sm:h-[100px] relative rounded-lg overflow-hidden cursor-pointer border-2 flex-shrink-0 ${
-                  selectedImage === image
-                    ? "border-[#FF4000]"
-                    : "border-gray-200"
-                }`}
-                onClick={() => handleProductImageChange(image)}>
-                <Image
-                  src={image}
-                  alt={`${product.name} image ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ))}
+            {product?.images?.map((image, index) => {
+              const isLoaded = thumbnailsLoaded.has(image);
+              return (
+                <div
+                  key={index}
+                  className={`w-16 h-16 sm:w-[100px] sm:h-[100px] relative rounded-lg overflow-hidden cursor-pointer border-2 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 ${
+                    selectedImage === image
+                      ? "border-[#FF4000]"
+                      : "border-gray-200"
+                  }`}
+                  onClick={() => handleProductImageChange(image)}>
+                  <Image
+                    src={image}
+                    alt={`${product.name} image ${index + 1}`}
+                    fill
+                    sizes="100px"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    className={`object-cover transition-all duration-500 ${
+                      isLoaded 
+                        ? 'opacity-100 scale-100' 
+                        : 'opacity-0 scale-105'
+                    }`}
+                    onLoad={() => handleThumbnailLoad(image)}
+                    priority={index === 0}
+                  />
+                  {!isLoaded && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-4 h-4 border border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
-          <div className="w-full sm:w-[400px] md:w-[500px] lg:w-[703px] aspect-[3/4] lg:h-[937px] lg:aspect-auto relative bg-gray-100 rounded-lg overflow-hidden">
+          <div className="w-full sm:w-[400px] md:w-[500px] lg:w-[703px] aspect-[3/4] lg:h-[937px] lg:aspect-auto relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden">
             {selectedImage && (
-              <Image
-                src={selectedImage}
-                alt={product?.name || "Product image"}
-                fill
-                className="object-cover"
-              />
+              <>
+                <Image
+                  src={selectedImage}
+                  alt={product?.name || "Product image"}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 500px, 703px"
+                  loading="eager"
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  className={`object-cover transition-all duration-500 ${
+                    mainImageLoaded 
+                      ? 'opacity-100 scale-100' 
+                      : 'opacity-0 scale-105'
+                  }`}
+                  onLoad={handleMainImageLoad}
+                  priority={true}
+                />
+                {!mainImageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-12 h-12 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

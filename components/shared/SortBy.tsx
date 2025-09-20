@@ -52,8 +52,8 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
                 option.isDefault
                   ? "cursor-default text-[#10151F]"
                   : currentSort === option.value
-                  ? "bg-[#FF4000] text-white"
-                  : "hover:bg-gray-50 text-gray-700"
+                  ? "bg-[#FF4000] text-white cursor-pointer"
+                  : "hover:bg-gray-50 text-gray-700 cursor-pointer"
               }`}>
               <span
                 className={
