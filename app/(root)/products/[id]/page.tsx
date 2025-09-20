@@ -21,7 +21,7 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const { openCart, addToCart, isLoading, error } = useCart();
   const { isAuthenticated } = useAuth();
-  
+
   const {
     selectedImage,
     selectedColor,
@@ -42,7 +42,6 @@ const ProductPage = () => {
     toggleDropdown: toggleQuantityDropdown,
     closeDropdown: closeQuantityDropdown,
   } = useDropdown();
-
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -206,7 +205,7 @@ const ProductPage = () => {
             </div>
             <div className="flex flex-col gap-4">
               <span className="text-[#3E424A] font-normal text-base">
-                Size:
+                Size: {selectedSize || "Not selected"}
               </span>
               <div className="flex gap-[10px]">
                 {product.available_sizes ? (
@@ -216,7 +215,7 @@ const ProductPage = () => {
                       onClick={() => handleSizeChange(size)}
                       className={`border ${
                         selectedSize === size
-                          ? "border-[#FF4000] bg-[#FF4000] text-white"
+                          ? "border-[#10151F] bg-[#F8F6F7]"
                           : "border-gray-300 text-gray-700 hover:border-gray-400"
                       }`}
                       style={{
@@ -229,9 +228,7 @@ const ProductPage = () => {
                         borderRadius: "10px",
                         borderWidth: "1px",
                       }}>
-                      <span className="text-base">
-                        {size}
-                      </span>
+                      <span className="text-base">{size}</span>
                     </button>
                   ))
                 ) : (
@@ -246,9 +243,12 @@ const ProductPage = () => {
               </span>
               <div className="relative w-fit" ref={quantityDropdownRef}>
                 <button
-                  onClick={toggleQuantityDropdown}
-                  className="w-[70px] h-[42px] px-4 py-[9px] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-between text-left">
-                  <span className="text-gray-700 text-sm">{quantity}</span>
+                  onClick={product.quantity > 0 ? toggleQuantityDropdown : undefined}
+                  disabled={product.quantity === 0}
+                  className={`w-[70px] h-[42px] px-4 py-[9px] border border-gray-300 rounded-lg transition-colors flex items-center justify-between text-left ${
+                    product.quantity > 0 ? 'hover:bg-gray-50 cursor-pointer' : 'bg-gray-100 cursor-not-allowed'
+                  }`}>
+                  <span className="text-gray-700 text-sm">{product.quantity > 0 ? quantity : 0}</span>
                   <Image
                     src="/assets/chevron-down.png"
                     alt="chevron-down"
@@ -260,9 +260,12 @@ const ProductPage = () => {
                   />
                 </button>
 
-                {showQuantityDropdown && (
+                {showQuantityDropdown && product.quantity > 0 && (
                   <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-[70px] max-h-[200px] overflow-y-auto">
-                    {DEFAULT_QUANTITY_OPTIONS.map((num) => (
+                    {Array.from(
+                      { length: product.quantity },
+                      (_, i) => i + 1
+                    ).map((num) => (
                       <button
                         key={num}
                         onClick={() => handleQuantitySelect(num)}

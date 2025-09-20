@@ -2,6 +2,22 @@ import { User, AuthResponse, LoginData, RegisterData } from "@/types/auth";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+// Simple cookie helpers
+const setCookie = (name: string, value: string) => {
+  document.cookie = `${name}=${value}; path=/; max-age=${7 * 24 * 60 * 60}; secure=${process.env.NODE_ENV === 'production'}; samesite=lax`;
+};
+
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+};
+
+const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+};
+
 export const authAPI = {
   async login(data: LoginData): Promise<AuthResponse> {
     const response = await fetch(`${API_BASE_URL}/login`, {
@@ -28,8 +44,9 @@ export const authAPI = {
 
     const result: AuthResponse = await response.json();
     
-    localStorage.setItem('auth_token', result.token);
-    localStorage.setItem('user_data', JSON.stringify(result.user));
+    // Store auth data in cookies
+    setCookie('auth_token', result.token);
+    setCookie('user_data', JSON.stringify(result.user));
     
     return result;
   },
@@ -75,20 +92,22 @@ export const authAPI = {
 
     const result: AuthResponse = await response.json();
     
-    localStorage.setItem('auth_token', result.token);
-    localStorage.setItem('user_data', JSON.stringify(result.user));
+    // Store auth data in cookies
+    setCookie('auth_token', result.token);
+    setCookie('user_data', JSON.stringify(result.user));
     
     return result;
   },
 
   logout() {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
+    // Clear auth data from cookies
+    deleteCookie('auth_token');
+    deleteCookie('user_data');
   },
 
   getCurrentUser(): User | null {
     try {
-      const userData = localStorage.getItem('user_data');
+      const userData = getCookie('user_data');
       return userData ? JSON.parse(userData) : null;
     } catch {
       return null;
@@ -96,11 +115,10 @@ export const authAPI = {
   },
 
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return getCookie('auth_token');
   },
 
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
 };
-

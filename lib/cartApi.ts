@@ -4,7 +4,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const getAuthToken = (): string | null => {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('auth_token');
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; auth_token=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
 };
 
 const getAuthHeaders = () => {

@@ -85,7 +85,7 @@ const HomePage = () => {
               borderWidth: "1px",
             }}>
             <span>
-              Price: {priceFilter.min || 0}-{priceFilter.max || "∞"}
+              Price: {priceFilter.min !== null ? `${priceFilter.min}` : "$0"}{priceFilter.max !== null ? ` - ${priceFilter.max}` : "+"}
             </span>
             <button
               onClick={() => {

@@ -7,12 +7,21 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useDropdown } from "@/hooks/useDropdown";
-import { getUserAvatarSrc, handleImageError, formatCartItemCount } from "@/utils/componentUtils";
+import {
+  getUserAvatarSrc,
+  handleImageError,
+  formatCartItemCount,
+} from "@/utils/componentUtils";
 
 const HeaderComponent = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { openCart, uniqueItemsCount } = useCart();
-  const { isOpen: isDropdownOpen, dropdownRef, toggleDropdown, closeDropdown } = useDropdown();
+  const {
+    isOpen: isDropdownOpen,
+    dropdownRef,
+    toggleDropdown,
+    closeDropdown,
+  } = useDropdown();
 
   const handleLogout = () => {
     logout();
@@ -106,7 +115,7 @@ const HeaderComponent = () => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-[#10151F] hover:bg-gray-50 transition-colors duration-200">
+                  className="w-full cursor-pointer text-left px-4 py-2 text-sm text-[#10151F] hover:bg-gray-50 transition-colors duration-200">
                   Logout
                 </button>
               </div>

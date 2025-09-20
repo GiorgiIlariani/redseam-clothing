@@ -20,8 +20,8 @@ const PriceFilter = forwardRef<PriceFilterRef, PriceFilterProps>(
     }));
 
     const handleApplyFilter = () => {
-      const minPrice = fromPrice ? parseFloat(fromPrice) : null;
-      const maxPrice = toPrice ? parseFloat(toPrice) : null;
+      const minPrice = fromPrice !== "" ? parseFloat(fromPrice) : null;
+      const maxPrice = toPrice !== "" ? parseFloat(toPrice) : null;
 
       onPriceChange(minPrice, maxPrice);
       closeDropdown();

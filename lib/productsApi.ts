@@ -10,11 +10,11 @@ export const productsAPI = {
       searchParams.append('page', params.page.toString());
     }
     
-    if (params.filter?.price_from) {
+    if (params.filter?.price_from !== undefined) {
       searchParams.append('filter[price_from]', params.filter.price_from.toString());
     }
     
-    if (params.filter?.price_to) {
+    if (params.filter?.price_to !== undefined) {
       searchParams.append('filter[price_to]', params.filter.price_to.toString());
     }
     
