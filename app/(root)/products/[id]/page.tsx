@@ -78,7 +78,13 @@ const ProductPage = () => {
     if (productId) {
       fetchProduct();
     }
-  }, [productId, setSelectedImage, setSelectedColor, setSelectedSize]);
+  }, [
+    productId,
+    setSelectedImage,
+    setSelectedColor,
+    setSelectedSize,
+    clearError,
+  ]);
 
   const handleQuantitySelect = (newQuantity: number) => {
     handleQuantityChange(newQuantity);

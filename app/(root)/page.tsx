@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import { productsAPI } from "@/lib/productsApi";
 import { ProductsResponse } from "@/types/products";
 import ProductCard from "@/components/shared/ProductCard";
@@ -52,6 +52,7 @@ const HomePage = () => {
   }, [currentPage, fetchProducts]);
 
   return (
+    <Suspense fallback={null}>
     <main className="w-full mt-16 sm:mt-[72px] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px]">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between w-full gap-4">
         <h1 className="text-[#10151F] font-semibold text-2xl sm:text-3xl lg:text-[42px]">Products</h1>
@@ -143,6 +144,7 @@ const HomePage = () => {
         </div>
       )}
     </main>
+    </Suspense>
   );
 };
 
