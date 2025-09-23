@@ -10,7 +10,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange, error }) => {
   const [, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
 
     if (file) {
@@ -26,6 +28,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageChange, error }) => {
         setSelectedFile(file);
         onImageChange?.(file);
       } catch (error) {
+        console.log(error);
         alert("Failed to process the selected file");
       }
     }

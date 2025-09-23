@@ -35,11 +35,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     const inputValue = useMemo(() => {
-      const valueFromProps = (rest as any).value as string | number | undefined;
-      const defaultFromProps = (rest as any).defaultValue as
-        | string
-        | number
-        | undefined;
+      const valueFromProps = rest.value as string | number | undefined;
+      const defaultFromProps = rest.defaultValue as string | number | undefined;
       const str = (valueFromProps ?? defaultFromProps ?? "") as string | number;
       return String(str);
     }, [rest]);
@@ -87,7 +84,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {showCustomPlaceholder && (
             <span
               aria-hidden
-              className={`pointer-events-none absolute ${hasLeftIcon ? "left-[42px]" : "left-[18px]"} top-1/2 -translate-y-1/2 flex items-center gap-1`}
+              className={`pointer-events-none absolute ${
+                hasLeftIcon ? "left-[42px]" : "left-[18px]"
+              } top-1/2 -translate-y-1/2 flex items-center gap-1`}
               style={{ fontSize: "14px", fontWeight: 400 }}>
               <span className="text-[#9CA3AF]">{placeholder}</span>
               <span className="text-[#FF4000]">*</span>
@@ -100,11 +99,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               onClick={togglePasswordVisibility}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#9CA3AF] hover:text-[#10151F] transition-colors duration-200 focus:outline-none"
               tabIndex={-1}>
-              {showPassword ? (
-                <EyeOff />
-              ) : (
-                <Eye />
-              )}
+              {showPassword ? <EyeOff /> : <Eye />}
             </button>
           )}
         </div>

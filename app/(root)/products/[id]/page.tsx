@@ -11,7 +11,6 @@ import { useDropdown } from "@/hooks/useDropdown";
 import { useProductSelection } from "@/hooks/useProductSelection";
 import ProductDetailSkeleton from "@/components/shared/ProductDetailSkeleton";
 import { getColorHex } from "@/utils/colorUtils";
-import { DEFAULT_QUANTITY_OPTIONS } from "@/utils/constants";
 
 const ProductPage = () => {
   const params = useParams();
