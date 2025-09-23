@@ -20,8 +20,10 @@ const ProductPage = () => {
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [mainImageLoaded, setMainImageLoaded] = useState(false);
-  const [thumbnailsLoaded, setThumbnailsLoaded] = useState<Set<string>>(new Set());
-  const { openCart, addToCart, isLoading, error } = useCart();
+  const [thumbnailsLoaded, setThumbnailsLoaded] = useState<Set<string>>(
+    new Set()
+  );
+  const { openCart, addToCart, isLoading, error, clearError } = useCart();
   const { isAuthenticated } = useAuth();
 
   const {
@@ -46,6 +48,8 @@ const ProductPage = () => {
   } = useDropdown();
 
   useEffect(() => {
+    clearError();
+
     const fetchProduct = async () => {
       try {
         setLoading(true);
@@ -83,7 +87,7 @@ const ProductPage = () => {
   };
 
   const handleThumbnailLoad = (imageUrl: string) => {
-    setThumbnailsLoaded(prev => new Set(prev).add(imageUrl));
+    setThumbnailsLoaded((prev) => new Set(prev).add(imageUrl));
   };
 
   const handleMainImageLoad = () => {
@@ -98,7 +102,7 @@ const ProductPage = () => {
 
   const handleProductImageChange = (image: string) => {
     if (product?.available_colors && product?.images) {
-      setMainImageLoaded(false); // Reset loading state for new image
+      setMainImageLoaded(false);
       handleImageChange(image, product.available_colors, product.images);
     }
   };
@@ -108,6 +112,12 @@ const ProductPage = () => {
 
     if (!isAuthenticated) {
       router.push("/sign-in");
+      return;
+    }
+
+    const availableQuantity = product.quantity ?? 0;
+    if (availableQuantity === 0) {
+      alert("This product is out of stock");
       return;
     }
 
@@ -125,7 +135,6 @@ const ProductPage = () => {
       product.available_sizes &&
       product.available_sizes.length > 0
     ) {
-      alert("Please select a size");
       return;
     }
 
@@ -147,6 +156,8 @@ const ProductPage = () => {
   if (!product) {
     return <div className="mt-[30px] px-[100px]">Product not found</div>;
   }
+
+  const availableQuantity = product.quantity ?? 0;
   return (
     <main className="mt-4 sm:mt-[30px] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px] pb-8 sm:pb-[110px]">
       <h4 className="text-sm font-normal text-[#10151F]">Listing / Product</h4>
@@ -174,9 +185,7 @@ const ProductPage = () => {
                     placeholder="blur"
                     blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                     className={`object-cover transition-all duration-500 ${
-                      isLoaded 
-                        ? 'opacity-100 scale-100' 
-                        : 'opacity-0 scale-105'
+                      isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
                     }`}
                     onLoad={() => handleThumbnailLoad(image)}
                     priority={index === 0}
@@ -203,9 +212,9 @@ const ProductPage = () => {
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                   className={`object-cover transition-all duration-500 ${
-                    mainImageLoaded 
-                      ? 'opacity-100 scale-100' 
-                      : 'opacity-0 scale-105'
+                    mainImageLoaded
+                      ? "opacity-100 scale-100"
+                      : "opacity-0 scale-105"
                   }`}
                   onLoad={handleMainImageLoad}
                   priority={true}
@@ -291,12 +300,18 @@ const ProductPage = () => {
               </span>
               <div className="relative w-fit" ref={quantityDropdownRef}>
                 <button
-                  onClick={product.quantity > 0 ? toggleQuantityDropdown : undefined}
-                  disabled={product.quantity === 0}
+                  onClick={
+                    availableQuantity > 0 ? toggleQuantityDropdown : undefined
+                  }
+                  disabled={availableQuantity === 0}
                   className={`w-[70px] h-[42px] px-4 py-[9px] border border-gray-300 rounded-lg transition-colors flex items-center justify-between text-left ${
-                    product.quantity > 0 ? 'hover:bg-gray-50 cursor-pointer' : 'bg-gray-100 cursor-not-allowed'
+                    availableQuantity > 0
+                      ? "hover:bg-gray-50 cursor-pointer"
+                      : "bg-gray-100 cursor-not-allowed"
                   }`}>
-                  <span className="text-gray-700 text-sm">{product.quantity > 0 ? quantity : 0}</span>
+                  <span className="text-gray-700 text-sm">
+                    {availableQuantity > 0 ? quantity : 0}
+                  </span>
                   <Image
                     src="/assets/chevron-down.png"
                     alt="chevron-down"
@@ -308,16 +323,16 @@ const ProductPage = () => {
                   />
                 </button>
 
-                {showQuantityDropdown && product.quantity > 0 && (
+                {showQuantityDropdown && availableQuantity > 0 && (
                   <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-[70px] max-h-[200px] overflow-y-auto">
                     {Array.from(
-                      { length: product.quantity },
+                      { length: availableQuantity },
                       (_, i) => i + 1
                     ).map((num) => (
                       <button
                         key={num}
                         onClick={() => handleQuantitySelect(num)}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${
+                        className={`w-full text-left px-4 py-2 text-sm cursor-pointer ${
                           quantity === num
                             ? "bg-[#FF4000] text-white"
                             : "text-gray-700"
@@ -339,13 +354,15 @@ const ProductPage = () => {
 
           <button
             onClick={handleAddToCart}
-            disabled={isLoading}
+            disabled={isLoading || (product.quantity ?? 0) === 0}
             className="w-full flex items-center justify-center gap-2 bg-[#FF4000] py-[10px] rounded-[10px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E63600] transition-colors duration-200">
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                 <p className="text-white text-lg font-medium">Adding...</p>
               </>
+            ) : (product.quantity ?? 0) === 0 ? (
+              <p className="text-white text-lg font-medium">Out of stock</p>
             ) : (
               <>
                 <Image

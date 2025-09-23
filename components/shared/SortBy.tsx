@@ -1,6 +1,7 @@
 "use client";
 
 import { useDropdown } from "@/hooks/useDropdown";
+import ChevronDown from "@/components/icons/ChevronDown";
 import { SortByProps } from "@/types/components";
 import { SORT_OPTIONS } from "@/utils/constants";
 
@@ -23,20 +24,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
         onClick={toggleDropdown}
         className="w-auto h-[40px] gap-1 px-2 py-2 flex items-center justify-between text-left">
         <span className="text-gray-700 text-sm">{getCurrentSortLabel()}</span>
-        <svg
-          className={`w-4 h-4 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (

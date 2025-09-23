@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import CartItem from "@/components/shared/CartItem";
@@ -108,7 +109,9 @@ const CheckoutPage = () => {
 
   return (
     <main className="mt-16 sm:mt-[72px] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-[100px]">
-      <h1 className="text-2xl sm:text-3xl lg:text-[42px] text-[#10151F] font-semibold">Checkout</h1>
+      <h1 className="text-2xl sm:text-3xl lg:text-[42px] text-[#10151F] font-semibold">
+        Checkout
+      </h1>
 
       <form onSubmit={handleSubmit}>
         <div className="mt-8 sm:mt-[42px] flex flex-col lg:flex-row gap-8 lg:gap-[131px]">
@@ -140,15 +143,26 @@ const CheckoutPage = () => {
               </div>
 
               <div className="w-full">
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleInputChange("email")}
-                  error={errors.email}
-                  className="w-full sm:w-[578px]"
-                  required
-                />
+                <div className="relative w-full sm:w-[578px]">
+                  <Image
+                    src="/assets/envelope.png"
+                    alt="email"
+                    width={20}
+                    height={20}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none"
+                  />
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleInputChange("email")}
+                    error={errors.email}
+                    className="w-full"
+                    hasLeftIcon
+                    required
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">

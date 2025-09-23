@@ -2,7 +2,6 @@ import { User, AuthResponse, LoginData, RegisterData } from "@/types/auth";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-// Simple cookie helpers
 const setCookie = (name: string, value: string) => {
   document.cookie = `${name}=${value}; path=/; max-age=${7 * 24 * 60 * 60}; secure=${process.env.NODE_ENV === 'production'}; samesite=lax`;
 };
@@ -44,7 +43,6 @@ export const authAPI = {
 
     const result: AuthResponse = await response.json();
     
-    // Store auth data in cookies
     setCookie('auth_token', result.token);
     setCookie('user_data', JSON.stringify(result.user));
     
@@ -92,7 +90,6 @@ export const authAPI = {
 
     const result: AuthResponse = await response.json();
     
-    // Store auth data in cookies
     setCookie('auth_token', result.token);
     setCookie('user_data', JSON.stringify(result.user));
     
@@ -100,7 +97,6 @@ export const authAPI = {
   },
 
   logout() {
-    // Clear auth data from cookies
     deleteCookie('auth_token');
     deleteCookie('user_data');
   },

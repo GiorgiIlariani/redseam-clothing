@@ -1,20 +1,50 @@
 "use client";
 
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useMemo, useState } from "react";
+import Eye from "@/components/icons/Eye";
+import EyeOff from "@/components/icons/EyeOff";
 import { InputProps } from "@/types/components";
-import { getInputPlaceholder, getInputType, isPasswordField } from "@/utils/inputHelpers";
+import {
+  getInputPlaceholder,
+  getInputType,
+  isPasswordField,
+} from "@/utils/inputHelpers";
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ error, variant = "default", className = "", required, ...props }, ref) => {
+  (
+    {
+      error,
+      variant = "default",
+      className = "",
+      required,
+      placeholder: incomingPlaceholder,
+      type: incomingType,
+      hasLeftIcon,
+      ...rest
+    },
+    ref
+  ) => {
     const [showPassword, setShowPassword] = useState(false);
 
-    const placeholder = getInputPlaceholder(variant, props.placeholder);
-    const inputType = getInputType(variant, showPassword, props.type);
+    const placeholder = getInputPlaceholder(variant, incomingPlaceholder);
+    const inputType = getInputType(variant, showPassword, incomingType);
     const isPassword = isPasswordField(variant);
 
     const togglePasswordVisibility = () => {
       setShowPassword(!showPassword);
     };
+
+    const inputValue = useMemo(() => {
+      const valueFromProps = (rest as any).value as string | number | undefined;
+      const defaultFromProps = (rest as any).defaultValue as
+        | string
+        | number
+        | undefined;
+      const str = (valueFromProps ?? defaultFromProps ?? "") as string | number;
+      return String(str);
+    }, [rest]);
+
+    const showCustomPlaceholder = required && inputValue.length === 0;
 
     return (
       <div className="flex flex-col gap-1">
@@ -22,10 +52,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             type={inputType}
-            placeholder={placeholder}
+            placeholder={showCustomPlaceholder ? "" : placeholder}
             className={`
               h-[42px] 
               px-4 
+              ${hasLeftIcon ? "pl-10" : ""}
               ${isPassword ? "pr-12" : "pr-4"}
               py-3 
               rounded-lg 
@@ -44,51 +75,35 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               focus:outline-none 
               transition-all 
               duration-200
-              ${required ? `placeholder-asterisk ${isPassword ? 'has-password-toggle' : ''}` : ''}
-              ${className || 'w-full'}
+              ${className || "w-full"}
             `}
             style={{
               fontSize: "14px",
               fontWeight: 400,
             }}
-            {...props}
+            {...rest}
           />
+
+          {showCustomPlaceholder && (
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute ${hasLeftIcon ? "left-[42px]" : "left-[18px]"} top-1/2 -translate-y-1/2 flex items-center gap-1`}
+              style={{ fontSize: "14px", fontWeight: 400 }}>
+              <span className="text-[#9CA3AF]">{placeholder}</span>
+              <span className="text-[#FF4000]">*</span>
+            </span>
+          )}
 
           {isPassword && (
             <button
               type="button"
               onClick={togglePasswordVisibility}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#9CA3AF] hover:text-[#10151F] transition-colors duration-200 focus:outline-none"
-              tabIndex={-1}
-            >
+              tabIndex={-1}>
               {showPassword ? (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                  <line x1="1" y1="1" x2="23" y2="23" />
-                </svg>
+                <EyeOff />
               ) : (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
+                <Eye />
               )}
             </button>
           )}

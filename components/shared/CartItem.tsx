@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { getBestImageForColor } from "@/utils/colorUtils";
 import { CartItem as CartItemType } from "@/types/cart";
 import { useCart } from "@/contexts/CartContext";
 
@@ -21,11 +22,18 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     removeFromCart(item.id);
   };
 
+  const displayedImage = getBestImageForColor(
+    item.color,
+    item.available_colors,
+    item.images,
+    item.cover_image
+  );
+
   return (
     <div className="flex gap-4 py-4">
       <div className="flex-shrink-0 border border-[#E1DFE1] rounded-[10px]">
         <Image
-          src={item.cover_image}
+          src={displayedImage}
           alt={item.name}
           width={100}
           height={134}

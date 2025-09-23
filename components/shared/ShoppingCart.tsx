@@ -2,6 +2,7 @@
 
 import { useCart } from "@/contexts/CartContext";
 import Image from "next/image";
+import Close from "@/components/icons/Close";
 import CartItem from "./CartItem";
 import { useRouter } from "next/navigation";
 import { DELIVERY_COST } from "@/utils/constants";
@@ -14,7 +15,6 @@ const ShoppingCart = () => {
     cartTotal,
     uniqueItemsCount,
     isLoading,
-    error,
   } = useCart();
   const router = useRouter();
 
@@ -45,22 +45,11 @@ const ShoppingCart = () => {
           <button
             onClick={closeCart}
             className="hover:opacity-70 transition-opacity">
-            <Image
-              src="/assets/x-mark.png"
-              alt="Close cart"
-              width={24}
-              height={24}
-            />
+            <Close className="w-6 h-6" />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 sm:px-10 min-h-0">
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-              <p className="text-red-700 text-sm">{error}</p>
-            </div>
-          )}
-
           {isLoading && cartItems.length === 0 ? (
             <div className="flex justify-center items-center pt-[151px]">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4000]"></div>

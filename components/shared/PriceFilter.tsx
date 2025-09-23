@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, forwardRef, useImperativeHandle } from "react";
-import Image from "next/image";
+import FilterAdjust from "@/components/icons/FilterAdjust";
 import { useDropdown } from "@/hooks/useDropdown";
 import { PriceFilterProps, PriceFilterRef } from "@/types/components";
 
@@ -38,12 +38,7 @@ const PriceFilter = forwardRef<PriceFilterRef, PriceFilterProps>(
         <button
           onClick={toggleDropdown}
           className="w-[70px] flex items-center gap-2 px-2 py-2">
-          <Image
-            src="/assets/adjustments-horizontal.png"
-            alt="Filter"
-            width={20}
-            height={20}
-          />
+          <FilterAdjust />
           <span className="text-gray-700 text-sm">Filter</span>
         </button>
 

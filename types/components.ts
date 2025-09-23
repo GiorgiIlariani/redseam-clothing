@@ -4,6 +4,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   variant?: "default" | "email" | "password" | "username" | "confirmPassword";
+  hasLeftIcon?: boolean;
 }
 
 export interface ImageUploadProps {

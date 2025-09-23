@@ -21,7 +21,7 @@ const SignUpPage = () => {
     confirmPassword: "",
     avatar: null,
   });
-  
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,10 +36,11 @@ const SignUpPage = () => {
     return !hasFormErrors(newErrors);
   };
 
-  const handleInputChange = (field: keyof Omit<SignUpFormData, 'avatar'>) => 
+  const handleInputChange =
+    (field: keyof Omit<SignUpFormData, "avatar">) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-      
+
       setFormData((prev) => ({
         ...prev,
         [field]: value,
@@ -52,7 +53,11 @@ const SignUpPage = () => {
         }));
       }
 
-      if (field === "password" && formData.confirmPassword && errors.confirmPassword) {
+      if (
+        field === "password" &&
+        formData.confirmPassword &&
+        errors.confirmPassword
+      ) {
         if (value === formData.confirmPassword) {
           setErrors((prev) => ({
             ...prev,
@@ -61,7 +66,11 @@ const SignUpPage = () => {
         }
       }
 
-      if (field === "confirmPassword" && formData.password && errors.confirmPassword) {
+      if (
+        field === "confirmPassword" &&
+        formData.password &&
+        errors.confirmPassword
+      ) {
         if (value === formData.password) {
           setErrors((prev) => ({
             ...prev,
@@ -72,9 +81,9 @@ const SignUpPage = () => {
     };
 
   const handleImageChange = (file: File | null) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      avatar: file
+      avatar: file,
     }));
   };
 
@@ -88,16 +97,17 @@ const SignUpPage = () => {
     setIsLoading(true);
 
     try {
-      const result = await authAPI.register({
+      const payload = {
         username: formData.username,
         email: formData.email,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
-        avatar: formData.avatar
-      });
+        avatar: formData.avatar,
+      };
 
+      const result = await authAPI.register(payload);
       setUser(result.user);
-      router.push('/');
+      router.push("/");
     } catch (error) {
       console.error("Registration error:", error);
       const errorObj = setFormErrorFromApiError(error);

@@ -35,3 +35,39 @@ export const getColorForImage = (image: string, availableColors: string[], image
   }
   return availableColors[0] || "";
 };
+
+export const getBestImageForColor = (
+  color: string,
+  availableColors: string[] | undefined,
+  images: string[] | undefined,
+  coverImage?: string
+): string => {
+  if (!images || images.length === 0) return coverImage || "";
+
+  if (availableColors && availableColors.length > 0) {
+    const idx = availableColors.indexOf(color);
+    if (idx >= 0 && idx < images.length) {
+      return images[idx];
+    }
+  }
+
+  const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, "");
+  const colorToken = normalize(color);
+
+  const synonyms: Record<string, string[]> = {
+    grey: ["grey", "gray"],
+    gray: ["gray", "grey"],
+    navyblue: ["navy", "navyblue"],
+  };
+
+  const candidateTokens = synonyms[colorToken] || [colorToken];
+
+  const matched = images.find((img) => {
+    const name = normalize(img);
+    return candidateTokens.some((token) => name.includes(token));
+  });
+
+  if (matched) return matched;
+
+  return images[0] || coverImage || "";
+};

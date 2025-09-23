@@ -1,10 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CartItem, CartContextType } from '@/types/cart';
-import { cartAPI } from '@/lib/cartApi';
-import { handleCartApiError } from '@/utils/cartUtils';
-import { useAuth } from './AuthContext';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { CartItem, CartContextType } from "@/types/cart";
+import { cartAPI } from "@/lib/cartApi";
+import { productsAPI } from "@/lib/productsApi";
+import { handleCartApiError } from "@/utils/cartUtils";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -26,10 +27,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
+  const clearError = () => setError(null);
 
   const fetchCart = async () => {
     if (!isAuthenticated) return;
-    
+
     try {
       setIsLoading(true);
       setError(null);
@@ -38,27 +40,52 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (err) {
       const errorMessage = handleCartApiError(err);
       setError(errorMessage);
-      console.error('Error fetching cart:', err);
+      console.error("Error fetching cart:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const addToCart = async (productId: number, color: string, size: string, quantity: number = 1) => {
+  const addToCart = async (
+    productId: number,
+    color: string,
+    size: string,
+    quantity: number = 1
+  ) => {
     if (!isAuthenticated) {
-      setError('Please log in to add items to cart');
+      setError("Please log in to add items to cart");
       return;
     }
 
     try {
       setIsLoading(true);
       setError(null);
-      await cartAPI.addToCart(productId, { color, size, quantity });
+      const product = await productsAPI.getProductById(productId);
+      const availableQuantity = product.quantity ?? 0;
+      const existingQuantityForProduct = cartItems
+        .filter((item) => item.id === productId)
+        .reduce((sum, item) => sum + item.quantity, 0);
+
+      const remaining = Math.max(
+        availableQuantity - existingQuantityForProduct,
+        0
+      );
+      if (remaining <= 0) {
+        setError("Maximum available quantity is already in your cart");
+        return;
+      }
+
+      const quantityToAdd = Math.min(quantity, remaining);
+      await cartAPI.addToCart(productId, {
+        color,
+        size,
+        quantity: quantityToAdd,
+      });
       await fetchCart();
     } catch (err) {
       const errorMessage = handleCartApiError(err);
       setError(errorMessage);
-      console.error('Error adding to cart:', err);
+      console.error("Error adding to cart:", err);
     } finally {
       setIsLoading(false);
     }
@@ -68,20 +95,33 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isAuthenticated) return;
 
     try {
-      setLoadingItems(prev => new Set(prev).add(productId));
+      setLoadingItems((prev) => new Set(prev).add(productId));
       setError(null);
       if (quantity <= 0) {
         await removeFromCart(productId);
         return;
       }
-      await cartAPI.updateCartQuantity(productId, { quantity });
+      const product = await productsAPI.getProductById(productId);
+      const availableQuantity = product.quantity ?? 0;
+      const clampedQuantity = Math.max(
+        1,
+        Math.min(quantity, availableQuantity)
+      );
+
+      if (clampedQuantity < quantity) {
+        setError(`Only ${availableQuantity} item(s) available in stock`);
+      }
+
+      await cartAPI.updateCartQuantity(productId, {
+        quantity: clampedQuantity,
+      });
       await fetchCart();
     } catch (err) {
       const errorMessage = handleCartApiError(err);
       setError(errorMessage);
-      console.error('Error updating cart quantity:', err);
+      console.error("Error updating cart quantity:", err);
     } finally {
-      setLoadingItems(prev => {
+      setLoadingItems((prev) => {
         const newSet = new Set(prev);
         newSet.delete(productId);
         return newSet;
@@ -93,16 +133,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isAuthenticated) return;
 
     try {
-      setLoadingItems(prev => new Set(prev).add(productId));
+      setLoadingItems((prev) => new Set(prev).add(productId));
       setError(null);
       await cartAPI.removeFromCart(productId);
       await fetchCart();
     } catch (err) {
       const errorMessage = handleCartApiError(err);
       setError(errorMessage);
-      console.error('Error removing from cart:', err);
+      console.error("Error removing from cart:", err);
     } finally {
-      setLoadingItems(prev => {
+      setLoadingItems((prev) => {
         const newSet = new Set(prev);
         newSet.delete(productId);
         return newSet;
@@ -110,29 +150,37 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const cartItemsCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+  const cartItemsCount = cartItems.reduce(
+    (count, item) => count + item.quantity,
+    0
+  );
   const uniqueItemsCount = cartItems.length;
-  const cartTotal = cartItems.reduce((total, item) => total + item.total_price, 0);
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + item.total_price,
+    0
+  );
 
   const isItemLoading = (productId: number) => loadingItems.has(productId);
 
   return (
-    <CartContext.Provider value={{ 
-      isCartOpen, 
-      cartItems,
-      cartItemsCount,
-      uniqueItemsCount,
-      cartTotal,
-      isLoading,
-      isItemLoading,
-      error,
-      openCart, 
-      closeCart,
-      addToCart,
-      updateQuantity,
-      removeFromCart,
-      fetchCart
-    }}>
+    <CartContext.Provider
+      value={{
+        isCartOpen,
+        cartItems,
+        cartItemsCount,
+        uniqueItemsCount,
+        cartTotal,
+        isLoading,
+        isItemLoading,
+        error,
+        openCart,
+        closeCart,
+        clearError,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        fetchCart,
+      }}>
       {children}
     </CartContext.Provider>
   );
@@ -141,7 +189,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
 };

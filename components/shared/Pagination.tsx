@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import ChevronDown from "@/components/icons/ChevronDown";
 import { getVisiblePages, isPageNumber } from "@/utils/pagination";
 import { PaginationProps } from "@/types/components";
 
@@ -16,15 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
         className="w-8 h-8 rounded flex items-center justify-center cursor-pointer transition-colors duration-200 hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent">
-        <Image
-          src="/assets/chevron-down.png"
-          alt="Previous"
-          width={16}
-          height={16}
-          className={`w-4 h-4 rotate-90 ${
-            currentPage <= 1 ? "opacity-30" : "opacity-70"
-          }`}
-        />
+        <ChevronDown className={`w-4 h-4 rotate-90 ${currentPage <= 1 ? "opacity-30" : "opacity-70"}`} />
       </button>
 
       {visiblePages.map((page, index) => (
@@ -50,15 +42,7 @@ const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
         className="w-8 h-8 rounded flex items-center justify-center cursor-pointer transition-colors duration-200 hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent">
-        <Image
-          src="/assets/chevron-down.png"
-          alt="Next"
-          width={16}
-          height={16}
-          className={`w-4 h-4 -rotate-90 ${
-            currentPage >= totalPages ? "opacity-30" : "opacity-70"
-          }`}
-        />
+        <ChevronDown className={`w-4 h-4 -rotate-90 ${currentPage >= totalPages ? "opacity-30" : "opacity-70"}`} />
       </button>
     </div>
   );
