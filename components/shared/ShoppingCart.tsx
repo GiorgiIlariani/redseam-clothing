@@ -26,7 +26,7 @@ const ShoppingCart = () => {
   return (
     <>
       {isCartOpen && (
-        <div className="fixed inset-0 bg-black/40 z-40" onClick={closeCart} />
+        <div className="fixed inset-0 bg-black/40 z-40 cursor-pointer" onClick={closeCart} />
       )}
 
       <div
@@ -44,7 +44,7 @@ const ShoppingCart = () => {
           </h2>
           <button
             onClick={closeCart}
-            className="hover:opacity-70 transition-opacity">
+            className="hover:opacity-70 transition-opacity cursor-pointer">
             <Close className="w-6 h-6" />
           </button>
         </div>

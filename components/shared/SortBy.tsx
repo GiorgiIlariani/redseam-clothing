@@ -10,7 +10,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
 
   const getCurrentSortLabel = () => {
     const option = SORT_OPTIONS.find((opt) => opt.value === currentSort);
-    return option ? option.label : "Sort By";
+    return option ? option.label : "Sort by";
   };
 
   const handleSortSelect = (sortValue: string) => {
@@ -22,7 +22,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className="w-auto h-[40px] gap-1 px-2 py-2 flex items-center justify-between text-left">
+        className="w-auto h-[40px] gap-1 px-2 py-2 flex items-center justify-between text-left cursor-pointer">
         <span className="text-gray-700 text-sm">{getCurrentSortLabel()}</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>

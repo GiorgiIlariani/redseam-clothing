@@ -19,7 +19,13 @@ export const productsAPI = {
     }
     
     if (params.sort) {
-      searchParams.append('sort', params.sort);
+      const sortMapping: Record<string, string> = {
+        newest: '-created_at',
+        'price-asc': 'price',
+        'price-desc': '-price',
+      };
+      const apiSort = sortMapping[params.sort] || params.sort;
+      searchParams.append('sort', apiSort);
     }
 
     const url = `${API_BASE_URL}/products${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;

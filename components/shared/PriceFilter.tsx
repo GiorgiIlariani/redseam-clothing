@@ -37,7 +37,7 @@ const PriceFilter = forwardRef<PriceFilterRef, PriceFilterProps>(
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={toggleDropdown}
-          className="w-[70px] flex items-center gap-2 px-2 py-2">
+          className="w-[70px] flex items-center gap-2 px-2 py-2 cursor-pointer">
           <FilterAdjust />
           <span className="text-gray-700 text-sm">Filter</span>
         </button>

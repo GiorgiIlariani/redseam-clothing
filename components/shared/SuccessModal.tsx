@@ -31,7 +31,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/40 cursor-pointer" onClick={onClose} />
 
       <div className="relative bg-white rounded-2xl shadow-xl max-w-[600px] w-full p-16 transform scale-100 transition-all duration-300 border border-gray-100">
         <button

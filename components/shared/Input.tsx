@@ -97,7 +97,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#9CA3AF] hover:text-[#10151F] transition-colors duration-200 focus:outline-none"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#9CA3AF] hover:text-[#10151F] transition-colors duration-200 focus:outline-none cursor-pointer"
               tabIndex={-1}>
               {showPassword ? <EyeOff /> : <Eye />}
             </button>

@@ -254,7 +254,7 @@ const ProductPage = () => {
                   <button
                     key={color}
                     onClick={() => handleProductColorChange(color)}
-                    className={`w-8 h-8 rounded-full border-2 ${
+                    className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
                       selectedColor === color
                         ? "border-[#FF4000]"
                         : "border-gray-300"
@@ -275,7 +275,7 @@ const ProductPage = () => {
                     <button
                       key={size}
                       onClick={() => handleSizeChange(size)}
-                      className={`border ${
+                      className={`border cursor-pointer ${
                         selectedSize === size
                           ? "border-[#10151F] bg-[#F8F6F7]"
                           : "border-gray-300 text-gray-700 hover:border-gray-400"

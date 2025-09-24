@@ -10,7 +10,7 @@ import PriceFilter from "@/components/shared/PriceFilter";
 import SortBy from "@/components/shared/SortBy";
 import Image from "next/image";
 import { useProductFilters } from "@/hooks/useProductFilters";
-import { PRODUCT_GRID_SKELETON_COUNT } from "@/utils/constants";
+import { PRODUCT_GRID_SKELETON_COUNT, SORT_OPTIONS } from "@/utils/constants";
 import { PriceFilterRef } from "@/types/components";
 
 const ProductsPage = () => {
@@ -78,7 +78,7 @@ const ProductsPage = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 mt-[19px]">
         {(priceFilter.min !== null || priceFilter.max !== null) && (
           <div
             className="flex items-center bg-white border border-gray-300 text-gray-700 text-sm"
@@ -111,13 +111,41 @@ const ProductsPage = () => {
             </button>
           </div>
         )}
+        {sortBy && (
+          <div
+            className="flex items-center bg-white border border-gray-300 text-gray-700 text-sm"
+            style={{
+              height: "37px",
+              paddingTop: "8px",
+              paddingRight: "10px",
+              paddingBottom: "8px",
+              paddingLeft: "16px",
+              gap: "6px",
+              borderRadius: "50px",
+              borderWidth: "1px",
+            }}>
+            <span>
+              {`Sort: ${SORT_OPTIONS.find((opt) => opt.value === sortBy)?.label || ""}`}
+            </span>
+            <button
+              onClick={() => handleSortChange("")}
+              className="ml-auto cursor-pointer hover:opacity-70 transition-opacity">
+              <Image
+                src="/assets/x-mark.png"
+                alt="Remove sort"
+                width={12}
+                height={12}
+              />
+            </button>
+          </div>
+        )}
       </div>
 
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 gap-y-8 sm:gap-y-12"
         style={{
           marginTop:
-            priceFilter.min !== null || priceFilter.max !== null
+            priceFilter.min !== null || priceFilter.max !== null || Boolean(sortBy)
               ? "26px"
               : "32px",
         }}>
@@ -156,3 +184,4 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+
