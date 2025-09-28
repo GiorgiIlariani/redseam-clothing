@@ -70,7 +70,10 @@ const ShoppingCart = () => {
               </p>
 
               <button
-                onClick={closeCart}
+                onClick={() => {
+                  closeCart();
+                  router.push("/");
+                }}
                 className="w-full sm:w-[214px] text-white mt-[58px] flex items-center justify-center gap-2 bg-[#FF4000] py-[10px] rounded-[10px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E63600] transition-colors duration-200">
                 Start shopping
               </button>

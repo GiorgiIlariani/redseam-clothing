@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { CartItem, CartContextType } from "@/types/cart";
 import { cartAPI } from "@/lib/cartApi";
 import { productsAPI } from "@/lib/productsApi";
@@ -25,9 +25,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isAuthenticated]);
 
-  const openCart = () => setIsCartOpen(true);
-  const closeCart = () => setIsCartOpen(false);
-  const clearError = () => setError(null);
+  const openCart = useCallback(() => setIsCartOpen(true), []);
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
+  const clearError = useCallback(() => setError(null), []);
 
   const fetchCart = async () => {
     if (!isAuthenticated) return;

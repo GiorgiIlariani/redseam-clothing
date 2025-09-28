@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import CartItem from "@/components/shared/CartItem";
@@ -11,7 +12,8 @@ import SuccessModal from "@/components/shared/SuccessModal";
 
 const CheckoutPage = () => {
   const { cartItems, cartTotal, fetchCart } = useCart();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -40,6 +42,12 @@ const CheckoutPage = () => {
       }));
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
 
   const handleInputChange =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
