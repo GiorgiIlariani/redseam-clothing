@@ -33,11 +33,11 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
             <button
               key={option.value}
               onClick={() =>
-                option.isDefault ? null : handleSortSelect(option.value)
+                'isDefault' in option && option.isDefault ? null : handleSortSelect(option.value)
               }
-              disabled={option.isDefault}
+              disabled={'isDefault' in option && option.isDefault}
               className={`w-full text-left transition-colors h-10 px-3 sm:px-4 ${
-                option.isDefault
+                'isDefault' in option && option.isDefault
                   ? "cursor-default text-[#10151F]"
                   : currentSort === option.value
                   ? "bg-[#FF4000] text-white cursor-pointer"
@@ -45,7 +45,7 @@ const SortBy = ({ onSortChange, currentSort }: SortByProps) => {
               }`}>
               <span
                 className={
-                  option.isDefault ? "text-base font-semibold" : "text-sm"
+                  'isDefault' in option && option.isDefault ? "text-base font-semibold" : "text-sm"
                 }>
                 {option.label}
               </span>
